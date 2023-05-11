@@ -1,14 +1,26 @@
 document.addEventListener('DOMContentLoaded', function() {
   var gameInfoElement = document.getElementById('game-info');
-  
-  // Função para obter as informações do próximo jogo
+  var apiKey = 'live_ece97839f17299d05e0d42989d0f96';
+  var url = 'https://api.api-futebol.com.br/v1/times/1/partidas/proximas';
+
   function getNextGame() {
-    // Aqui você deve implementar a lógica para buscar as informações do próximo jogo do Sport Club do Recife, por exemplo, através de uma API ou raspagem de dados de um site confiável.
-    // Após obter as informações, atualize o conteúdo do elemento gameInfoElement.
-    // Exemplo:
-    gameInfoElement.innerText = 'Próximo jogo: Sport Club do Recife vs. Time X - Data: XX/XX/XXXX';
+    var headers = {
+      'Authorization': 'Bearer ' + apiKey
+    };
+
+    fetch(url, { headers: headers })
+      .then(response => response.json())
+      .then(data => {
+        // Processar a resposta da API aqui
+        // Exemplo de atualização do conteúdo do elemento gameInfoElement:
+        gameInfoElement.innerText = 'Próximo jogo: ' + data.nomeTime1 + ' vs. ' + data.nomeTime2 + ' - Data: ' + data.data;
+      })
+      .catch(error => {
+        // Lidar com erros
+        console.error(error);
+      });
   }
-  
+
   // Chamada inicial para obter o próximo jogo
   getNextGame();
 });
