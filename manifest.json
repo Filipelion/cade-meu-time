@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Próximo Jogo do Maior do Nordeste",
-  "version": "1.0",
-  "description": "Uma extensão para exibir os próximos jogos do Sport Club do Recife.",
+  "name": "Maior do Nordeste",
+  "version": "1.2",
+  "description": "De rubro-negro para rubro-negro. Não perca nada do Sport Club do Recife.",
   "permissions": [
     "https://www.placardefutebol.com.br/"
   ],
