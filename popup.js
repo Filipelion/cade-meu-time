@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
-  var gameInfoElement = document.getElementById('game-info');
+ /*  var gameInfoElement = document.getElementById('game-info');
   var apiKey = 'live_ece97839f17299d05e0d42989d0f96';
-  var url = 'https://api.api-futebol.com.br/v1/times/1/partidas/proximas';
+  //56 = Palmeiras
+  var url = 'https://api.api-futebol.com.br/v1/times/56/partidas/proximas';
 
   function getNextGame() {
     var headers = {
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Lidar com erros
         console.error(error);
       });
-  }
+  } */
 
   // Chamada inicial para obter o próximo jogo
   getNextGame();
