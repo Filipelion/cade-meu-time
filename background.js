@@ -1,30 +1,40 @@
 function getNextGame() {
   document.addEventListener('DOMContentLoaded', function() {
     var gameInfoElement = document.getElementById('game-info');
+    const url = 'https://www.placardefutebol.com.br/time/sport/proximos-jogos';
+    const xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        const html = xhr.responseText;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        const dataElement = doc.querySelector('.match__lg_card--datetime');
+        const leagueElement = doc.querySelector('.match__lg_card--league');
+        const teamsElement = doc.querySelectorAll('.match__lg_card--ht-name.text');
+
+        const data = dataElement ? dataElement.textContent.trim().split('\n').map(item => item.trim()).filter(item => item !== '') : 'Data não encontrada';
+        const liga = leagueElement ? leagueElement.textContent.trim() : 'Liga não encontrada';
+        const times = Array.from(teamsElement).map(element => element.textContent);
+
+        var info = liga + "<br>" + times[0] + " VS " + times[1] + "<br>" ;
+        var data_pretty = data[0] + "às" + data[1];
+        gameInfoElement.innerText = info + data_pretty;
+      }
+    };
+
+    xhr.open('GET', url);
+    xhr.send();
+
+/*     var gameInfo = 'Próximo jogo: ' + timeMandante + ' vs. ' + timeVisitante + ' - Data: ' + dataPartida;
+    console.log('gameInfo' + gameInfo);
+
+    
+    */
   
-    fetch('https://www.google.com/search?q=proximo+jogo+do+sport&oq=proximo+jogo+so&aqs=chrome.1.69i57j0i13i512l9.4362j1j7&sourceid=chrome&ie=UTF-8&bshm=bshwcqp/1#sie=t;/m/02vpvk;2;/m/0fnkb5;mt;fp;1;;;')
-      .then(response => response.text())
-      .then(html => {
-        const tempElement = document.createElement('div');
-        tempElement.innerHTML = html;
-  
-        const gameElement = tempElement.querySelector('div.klwc-c');
-  
-        if (gameElement) {
-          const nomeTime1 = gameElement.querySelector('span.klwc-team-names span:first-child').textContent;
-          const nomeTime2 = gameElement.querySelector('span.klwc-team-names span:last-child').textContent;
-          const data = gameElement.querySelector('span.klwc-date').textContent;
-  
-          gameInfoElement.innerText = `Próximo jogo: ${nomeTime1} vs ${nomeTime2} - Data: ${data}`;
-        } else {
-          gameInfoElement.innerText = 'Nenhum próximo jogo encontrado.';
-        }
-        gameInfoElement.innerText = "FOI??"
-      })
-      .catch(error => {
-        console.error('Erro ao carregar a página:', error);
-      });
   });
-  
+    
 }
-  
+
+getNextGame();
