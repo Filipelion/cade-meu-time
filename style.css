@@ -1,0 +1,101 @@
+body {
+    font-family: "Roboto Condensed", Arial, sans-serif;
+    padding: 20px;
+}
+
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 10px 20px;
+    background-color: #f2f2f2;
+    border-radius: 4px 4px 0 0;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.tab.active {
+    background-color: #fff;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.content {
+    display: none;
+}
+
+.content.active {
+    display: block;
+}
+
+h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.game-teams {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Centraliza os elementos horizontalmente */
+    margin-bottom: 10px;
+}
+
+.home-team-name,
+.away-team-name {
+    font-weight: 500;
+    color: #444;
+}
+
+.home-team-icon,
+.away-team-icon {
+    width: 30px;
+    height: auto;
+}
+
+
+.home-team-icon {
+    margin-right: 10px;
+}
+
+.away-team-icon {
+    margin-left: 10px;
+}
+
+.vs-text {
+    margin: 0 8px;
+    /* Espaçamento para o lado esquerdo e direito, centralizando o "vs-text" */
+}
+
+.game-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    /* Centraliza os elementos verticalmente */
+}
+
+.game-date {
+    font-size: 12px;
+    color: #666;
+}
+
+.game-league {
+    font-size: 14px;
+    margin-bottom: 8px;
+    /* Adiciona margem de 8px para baixo */
+}
+
+.game {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.game:first-child {
+    color: red;
+    font-size: 14px;
+}

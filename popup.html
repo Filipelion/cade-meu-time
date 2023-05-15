@@ -1,69 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Extensão do Chrome</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
+  <link rel="stylesheet" href="style.css">
+  <!-- Link para a fonte "Roboto Condensed" no Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap">
 
-    .tabs {
-      display: flex;
-      margin-bottom: 20px;
-    }
-
-    .tab {
-      padding: 10px 20px;
-      background-color: #f2f2f2;
-      border-radius: 4px 4px 0 0;
-      margin-right: 10px;
-      cursor: pointer;
-    }
-
-    .tab.active {
-      background-color: #fff;
-      border-bottom: 1px solid #f2f2f2;
-    }
-
-    .content {
-      display: none;
-    }
-
-    .content.active {
-      display: block;
-    }
-
-    h1 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .game {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .team-icon {
-      width: 24px;
-      height: 24px;
-      margin-right: 8px;
-    }
-
-    .game-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .game-date {
-      font-size: 12px;
-      color: #666;
-    }
-  </style>
 </head>
+
 <body>
   <div class="tabs">
     <div class="tab active" id="tab-games">Jogos</div>
@@ -86,6 +33,7 @@
     <div id="videos-list"></div>
   </div>
 
-  <script src="background.js"></script>
+  <script class="games" src="background.js"></script>
 </body>
+
 </html>

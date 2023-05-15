@@ -52,23 +52,54 @@ getRequest(url, function (responseText) {
     var gameContainer = document.createElement('div');
     gameContainer.className = 'game';
 
+    var homeTeam = document.createElement('div');
+    homeTeam.className = 'home-team-div';
+
     var homeIcon = document.createElement('img');
-    homeIcon.className = 'team-icon';
+    homeIcon.className = 'home-team-icon';
     homeIcon.src = img_src_home[i];
 
+    var homeTeamName = document.createElement('span');
+    homeTeamName.className = 'home-team-name';
+    homeTeamName.textContent = team_home[i];
+
+    homeTeam.appendChild(homeIcon);
+    homeTeam.appendChild(homeTeamName);
+
+    var vsText = document.createElement('span');
+    vsText.className = 'vs-text';
+    vsText.textContent = 'VS';
+
+    var awayTeam = document.createElement('div');
+    awayTeam.className = 'away-team-div';
+
+    var awayTeamName = document.createElement('span');
+    awayTeamName.className = 'away-team-name';
+    awayTeamName.textContent = team_away[i];
+
     var awayIcon = document.createElement('img');
-    awayIcon.className = 'team-icon';
+    awayIcon.className = 'away-team-icon';
     awayIcon.src = img_src_away[i];
+
+    awayTeam.appendChild(awayIcon);
+    awayTeam.appendChild(awayTeamName);
 
     var gameInfo = document.createElement('div');
     gameInfo.className = 'game-info';
 
     var gameLeague = document.createElement('span');
+    gameLeague.className = 'game-league';
     gameLeague.textContent = campeonato[i];
     gameLeague.style.fontWeight = 'bold';
 
-    var gameTeams = document.createElement('span');
-    gameTeams.textContent = team_home[i] + ' vs ' + team_away[i];
+    var gameTeams = document.createElement('div');
+    gameTeams.className = 'game-teams';
+
+    gameTeams.appendChild(homeIcon);
+    gameTeams.appendChild(homeTeam);
+    gameTeams.appendChild(vsText);
+    gameTeams.appendChild(awayTeam);
+    gameTeams.appendChild(awayIcon);
 
     var gameDate = document.createElement('span');
     gameDate.className = 'game-date';
@@ -82,11 +113,9 @@ getRequest(url, function (responseText) {
     gameInfo.appendChild(gameLeague);
     gameInfo.appendChild(gameTeams);
     gameInfo.appendChild(gameDate);
-    
-    gameContainer.appendChild(homeIcon);
-    gameContainer.appendChild(awayIcon);
+
     gameContainer.appendChild(gameInfo);
-    
+
     gamesList.appendChild(gameContainer);
   }
 });
