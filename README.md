@@ -4,7 +4,13 @@
 
 A Extensão do Chrome "Maior do Nordeste" é uma ferramenta que permite aos fãs do [Sport Club do Recife](https://sportrecife.com.br/) acompanhar as notícias mais recentes e os próximos jogos de seu time favorito diretamente no navegador.
 
-![Exemplo de captura de tela da extensão - Aba "Próximos Jogos"](screenshots/proximosJogos.png)
+<p align="center">
+  <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/proximosJogos.png" alt="Captura de tela da extensão - "Próximos jogos"">
+</p>
+<p align="center">
+  Captura de tela da extensão - "Próximos jogos"
+</p>
+
 
 ## Recursos
 
