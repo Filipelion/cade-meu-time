@@ -119,3 +119,67 @@ getRequest(url, function (responseText) {
     gamesList.appendChild(gameContainer);
   }
 });
+
+function getNews() {
+  const url = "https://sportrecife.com.br/noticias/";
+  var newsContainer = document.getElementById('news-list');
+  
+  // Usamos chrome.webRequest.onBeforeRequest para fazer a solicitação.
+  chrome.webRequest.onBeforeRequest.addListener(
+    function(details) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          const parser = new DOMParser();
+          const htmlDocument = parser.parseFromString(xhr.responseText, "text/html");
+          const news = htmlDocument.querySelectorAll(".noticia");
+          for (let i = 0; i < 3; i++) {
+            const title = news[i].querySelector("a").textContent;
+            const link = news[i].querySelector("a").href;
+            const image = news[i].querySelector("img").src;
+            const article = document.createElement("article");
+            article.innerHTML = `
+              <h2>${title}</h2>
+              <img src="${image}" alt="${title}" />
+              <p><a href="${link}">Leia mais</a></p>
+            `;
+            newsContainer.appendChild(article);
+          }
+        }
+      };
+
+      xhr.send();
+    },
+    { urls: ["<all_urls>"] },
+    ["blocking"]
+  );
+}
+
+
+function activateTab(tabId) {
+  // Remove a classe "active" de todas as abas e conteúdos
+  const allTabs = document.querySelectorAll(".tab");
+  allTabs.forEach(tab => tab.classList.remove("active"));
+  const allContents = document.querySelectorAll(".content");
+  allContents.forEach(content => content.classList.remove("active"));
+
+  // Adicione a classe "active" à aba correspondente e ao conteúdo correspondente
+  const tab = document.getElementById(tabId);
+  const contentId = tabId.replace("tab-", "content-");
+  const content = document.getElementById(contentId);
+
+  if (tab && content) {
+      tab.classList.add("active");
+      content.classList.add("active");
+  }
+}
+
+const tabGames = document.getElementById("tab-games");
+const tabNews = document.getElementById("tab-news");
+const tabVideos = document.getElementById("tab-videos");
+
+tabGames.addEventListener("click", () => activateTab("tab-games"));
+tabNews.addEventListener("click", () => activateTab("tab-news"));
+tabVideos.addEventListener("click", () => activateTab("tab-videos"));
