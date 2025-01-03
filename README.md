@@ -10,13 +10,25 @@ A Extensão do Chrome "Maior do Nordeste" é uma ferramenta que permite aos fãs
 <p align="center">
   Captura de tela da extensão - "Próximos jogos"
 </p>
+<p align="center">
+  <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/noticias.png" alt="Captura de tela da extensão - "Noticias"">
+</p>
+<p align="center">
+  Captura de tela da extensão - "Noticias"
+</p>
+<p align="center">
+  <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/videos.png" alt="Captura de tela da extensão - "Videos"">
+</p>
+<p align="center">
+  Captura de tela da extensão - "Videos"
+</p>
 
 
 ## Recursos
 
 - Obtenha informações e saiba mais sobre os detalhes dos próximos jogos do Sport.
-- Visualize as notícias mais recentes sobre o Sport Club do Recife.
-- Navegue pelos últimos vídeos do canal do Sport. 
+- Acesse as notícias mais recentes sobre o Sport Club do Recife.
+- Veja os últimos vídeos do canal TVSport e do Globo Esporte. 
 
 ## Instalação
 

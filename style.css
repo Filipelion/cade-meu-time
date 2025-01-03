@@ -3,7 +3,6 @@ body {
     padding: 20px;
 }
 
-
 .tabs {
     display: flex;
     margin-bottom: 20px;
@@ -39,7 +38,6 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Centraliza os elementos horizontalmente */
     margin-bottom: 10px;
 }
 
@@ -55,7 +53,6 @@ h1 {
     height: auto;
 }
 
-
 .home-team-icon {
     margin-right: 10px;
 }
@@ -66,7 +63,6 @@ h1 {
 
 .vs-text {
     margin: 0 8px;
-    /* Espaçamento para o lado esquerdo e direito, centralizando o "vs-text" */
 }
 
 .game-info {
@@ -74,7 +70,6 @@ h1 {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    /* Centraliza os elementos verticalmente */
 }
 
 .game-date {
@@ -85,17 +80,98 @@ h1 {
 .game-league {
     font-size: 14px;
     margin-bottom: 8px;
-    /* Adiciona margem de 8px para baixo */
 }
 
 .game {
+    align-items: center;
+    justify-content: flex-start;
     background-color: #f2f2f2;
-    padding: 10px;
-    border-radius: 4px;
+    padding: 15px;
+    border-radius: 8px;
     margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out,
+                background-color 0.2s ease-in-out;
 }
 
 .game:first-child {
     color: red;
     font-size: 14px;
+}
+
+/* Estilo de cada item de vídeo ao clicar */
+.game:first-child:hover{
+    color: #ffee03; /* Cor de destaque ao passar o mouse */
+}
+
+/* Estilo geral para os cards de notícias */
+#news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaçamento entre os cards */
+}
+
+/* Estilo geral para os cards de vídeos */
+#videos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaçamento entre os cards */
+}
+
+/* Estilo adicional para os outros cards (Jogos e Vídeos) */
+.news-card, 
+.video-card {
+    align-items: center;
+    /*NOVO*/
+    flex-direction: column; /* Organiza os itens na vertical */
+    align-items: center; /* Centraliza os itens horizontalmente */
+    justify-content: center; /* Centraliza os itens verticalmente */
+    /*justify-content: flex-start;*/
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, 
+                background-color 0.2s ease-in-out;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.game:hover, 
+.news-card:hover, 
+.video-card:hover {
+    transform: scale(1.05);
+    background-color: red;
+}
+
+/* Ícones e títulos */
+.news-icon, 
+.video-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px; /* Espaçamento entre o ícone e o título */
+    vertical-align: middle; /* Alinha o ícone com o texto */
+    border-radius: 50%; /* Deixa o ícone arredondado */
+    object-fit: cover; /* Faz o ícone ajustar-se ao espaço */
+    display: inline-block;
+}
+
+.news-title, 
+.video-title {
+    align-items: center; /* Centraliza verticalmente o conteúdo */
+    justify-content: center; /* Centraliza horizontalmente o conteúdo */
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center; /* Centraliza o texto horizontalmente */
+    text-decoration: none; /* Remove qualquer sublinhado nos links */
+    color: #444; /* Cor de texto mais forte para consistência */
+    display: inline-block; /* Garante que o título fique no mesmo nível que o ícone */
+    vertical-align: middle; /* Alinha verticalmente com o ícone */
+    margin-left: 15px; /* Margem para separar o ícone do título */
+}
+
+/* Estilo de cada item ao passar o mouse */
+.news-card a:hover .news-title,
+.video-card a:hover .video-title {
+    color: #ffee03;
 }

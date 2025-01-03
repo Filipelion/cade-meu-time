@@ -1,12 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Maior do Nordeste",
-  "version": "1.3",
+  "name": "Maior do Nordeste - Sport Club do Recife",
+  "version": "1.4",
   "description": "De rubro-negro para rubro-negro. Não perca nada do Sport Club do Recife.",
   "permissions": [
     "activeTab",
-    "https://www.placardefutebol.com.br/",
-    "'https://sportrecife.com.br/noticias/"
+    "https://www.placardefutebol.com.br/"
   ],
   "content_scripts": [
     {
