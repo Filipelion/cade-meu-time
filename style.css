@@ -1,24 +1,76 @@
+:root {
+    --bg-body: #f0f0f0;
+    --bg-card: #ffffff;
+    --bg-tab-inactive: #c8c8c8;
+    --bg-tab-hover: #b5b5b5;
+    --bg-tabs-bar: #c8c8c8;
+    --tab-text-inactive: #555;
+    --text-primary: #444;
+    --text-secondary: #666;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --icon-fill: #555;
+    --toggle-bg: #b0b0b0;
+    --toggle-thumb: #fff;
+    --toggle-text: #777;
+}
+
+body.dark {
+    --bg-body: #181818;
+    --bg-card: #2d2d2d;
+    --bg-tab-inactive: #2a2a2a;
+    --bg-tab-hover: #383838;
+    --bg-tabs-bar: #222;
+    --tab-text-inactive: #888;
+    --text-primary: #e0e0e0;
+    --text-secondary: #aaa;
+    --shadow: rgba(0, 0, 0, 0.4);
+    --icon-fill: #ccc;
+    --toggle-bg: #b80000;
+    --toggle-thumb: #fff;
+    --toggle-text: #aaa;
+}
+
 body {
     font-family: "Roboto Condensed", Arial, sans-serif;
     padding: 20px;
+    background: var(--bg-body);
+    transition: background 0.2s;
 }
 
+/* Tabs */
 .tabs {
     display: flex;
-    margin-bottom: 20px;
+    background: var(--bg-tabs-bar);
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    gap: 2px;
+    padding: 4px 4px 0;
 }
 
 .tab {
-    padding: 10px 20px;
-    background-color: #f2f2f2;
-    border-radius: 4px 4px 0 0;
-    margin-right: 10px;
+    padding: 8px 20px;
+    background-color: var(--bg-tab-inactive);
+    color: var(--tab-text-inactive);
+    border-radius: 6px 6px 0 0;
     cursor: pointer;
+    font-weight: bold;
+    font-size: 13px;
+    transition: background-color 0.15s, color 0.15s;
+    user-select: none;
+}
+
+.tab:not(.active):hover {
+    background-color: var(--bg-tab-hover);
+    color: var(--text-primary);
 }
 
 .tab.active {
-    background-color: #fff;
-    border-bottom: 1px solid #f2f2f2;
+    background-color: #b80000;
+    color: #ffee03;
+    border-bottom: 3px solid #ffee03;
+    z-index: 2;
+    font-weight: bold;
+    padding-bottom: 5px;
 }
 
 .content {
@@ -27,11 +79,85 @@ body {
 
 .content.active {
     display: block;
+    background: var(--bg-body);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 8px var(--shadow);
+    padding: 5px;
 }
 
-h1 {
-    font-size: 18px;
+/* Games top bar: "Jogos Encerrados" + dark mode toggle side by side */
+.games-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+/* Dark mode toggle */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 10px;
+    color: var(--toggle-text);
+    user-select: none;
+    text-decoration: none;
+    margin-left: 12px;
+    flex-shrink: 0;
+}
+
+.theme-toggle input {
+    display: none;
+}
+
+.toggle-track {
+    width: 24px;
+    height: 14px;
+    background: var(--toggle-bg);
+    border-radius: 7px;
+    position: relative;
+    transition: background 0.2s;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.toggle-thumb {
+    width: 8px;
+    height: 8px;
+    background: var(--toggle-thumb);
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: left 0.2s;
+}
+
+.theme-toggle input:checked + .toggle-track .toggle-thumb {
+    left: 13px;
+}
+
+/* Game match cards — same pattern as news/video cards */
+.game {
+    background-color: var(--bg-card);
+    padding: 15px;
+    border-radius: 8px;
     margin-bottom: 10px;
+    box-shadow: 0 2px 5px var(--shadow);
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.game:hover {
+    transform: scale(1.05);
+    background-color: #b80000;
+}
+
+.game:hover .home-team-name,
+.game:hover .away-team-name,
+.game:hover .vs-text,
+.game:hover .game-league,
+.game:hover .game-date {
+    color: #ffee03;
 }
 
 .game-teams {
@@ -44,7 +170,7 @@ h1 {
 .home-team-name,
 .away-team-name {
     font-weight: 500;
-    color: #444;
+    color: var(--text-primary);
 }
 
 .home-team-icon,
@@ -63,6 +189,7 @@ h1 {
 
 .vs-text {
     margin: 0 8px;
+    color: var(--text-secondary);
 }
 
 .game-info {
@@ -74,104 +201,142 @@ h1 {
 
 .game-date {
     font-size: 12px;
-    color: #666;
+    color: var(--text-secondary);
 }
 
 .game-league {
     font-size: 14px;
     margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: bold;
 }
 
-.game {
-    align-items: center;
-    justify-content: flex-start;
-    background-color: #f2f2f2;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out,
-                background-color 0.2s ease-in-out;
+/* First match card: league title in red (light mode only) */
+.game:first-child .game-league {
+    color: #b80000;
 }
 
-.game:first-child {
-    color: red;
-    font-size: 14px;
+body.dark .game:first-child .game-league {
+    color: var(--text-primary);
 }
 
-/* Estilo de cada item de vídeo ao clicar */
-.game:first-child:hover{
-    color: #ffee03; /* Cor de destaque ao passar o mouse */
+/* Restore yellow on hover for first card (overrides the red) */
+.game:first-child:hover .game-league {
+    color: #ffee03;
 }
 
-/* Estilo geral para os cards de notícias */
+/* News / video lists */
 #news-list {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Espaçamento entre os cards */
+    gap: 10px;
 }
 
-/* Estilo geral para os cards de vídeos */
 #videos-list {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Espaçamento entre os cards */
+    gap: 10px;
 }
 
-/* Estilo adicional para os outros cards (Jogos e Vídeos) */
-.news-card, 
+/* Shared card style for news and video */
+.news-card,
 .video-card {
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    /*NOVO*/
-    flex-direction: column; /* Organiza os itens na vertical */
-    align-items: center; /* Centraliza os itens horizontalmente */
-    justify-content: center; /* Centraliza os itens verticalmente */
-    /*justify-content: flex-start;*/
-    background-color: #f9f9f9;
     padding: 15px;
+    background-color: var(--bg-card);
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out, 
-                background-color 0.2s ease-in-out;
+    box-shadow: 0 2px 5px var(--shadow);
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
     cursor: pointer;
     text-decoration: none;
 }
 
-.game:hover, 
-.news-card:hover, 
+.news-card:hover,
 .video-card:hover {
     transform: scale(1.05);
-    background-color: red;
+    background-color: #b80000;
 }
 
-/* Ícones e títulos */
-.news-icon, 
-.video-icon {
+/* "Jogos Encerrados" button — smaller, separate from news/video cards */
+.game-card-finished {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 10px;
+    background-color: var(--bg-card);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px var(--shadow);
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.game-card-finished:hover {
+    transform: scale(1.05);
+    background-color: #b80000;
+}
+
+/* Image icons (rounded photos) */
+img.news-icon,
+img.video-icon {
     width: 30px;
     height: 30px;
-    margin-right: 10px; /* Espaçamento entre o ícone e o título */
-    vertical-align: middle; /* Alinha o ícone com o texto */
-    border-radius: 50%; /* Deixa o ícone arredondado */
-    object-fit: cover; /* Faz o ícone ajustar-se ao espaço */
-    display: inline-block;
+    margin-right: 10px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
 }
 
-.news-title, 
+/* SVG icons (flat icons — no circular crop) */
+svg.news-icon,
+svg.video-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    fill: var(--icon-fill);
+    flex-shrink: 0;
+    transition: fill 0.2s;
+}
+
+/* Calendar icon inside "Jogos Encerrados" */
+.game-card-finished svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    fill: var(--icon-fill);
+    flex-shrink: 0;
+    transition: fill 0.2s;
+}
+
+/* Titles */
+.news-title,
 .video-title {
-    align-items: center; /* Centraliza verticalmente o conteúdo */
-    justify-content: center; /* Centraliza horizontalmente o conteúdo */
     font-size: 14px;
-    font-weight: bold;
-    text-align: center; /* Centraliza o texto horizontalmente */
-    text-decoration: none; /* Remove qualquer sublinhado nos links */
-    color: #444; /* Cor de texto mais forte para consistência */
-    display: inline-block; /* Garante que o título fique no mesmo nível que o ícone */
-    vertical-align: middle; /* Alinha verticalmente com o ícone */
-    margin-left: 15px; /* Margem para separar o ícone do título */
+    text-decoration: none;
+    color: var(--text-primary);
+    vertical-align: middle;
+    transition: color 0.2s;
 }
 
-/* Estilo de cada item ao passar o mouse */
-.news-card a:hover .news-title,
-.video-card a:hover .video-title {
+.game-card-finished-text {
+    font-size: 11px;
+    text-decoration: none;
+    color: var(--text-primary);
+    vertical-align: middle;
+    transition: color 0.2s;
+}
+
+/* Hover text colors */
+.news-card:hover .news-title,
+.video-card:hover .video-title,
+.game-card-finished:hover .game-card-finished-text {
     color: #ffee03;
+}
+
+.news-card:hover svg.news-icon,
+.video-card:hover svg.video-icon,
+.game-card-finished:hover svg {
+    fill: #ffee03;
 }

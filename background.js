@@ -187,3 +187,21 @@ const tabVideos = document.getElementById("tab-videos");
 tabGames.addEventListener("click", () => activateTab("tab-games", console.log("Tab > Games")));
 tabNews.addEventListener("click", () => activateTab("tab-news", console.log("Tab > News")));
 tabVideos.addEventListener("click", () => activateTab("tab-videos", console.log("Tab > Videos")));
+
+// Dark mode toggle
+const darkToggle = document.getElementById('dark-mode-toggle');
+const toggleLabel = document.getElementById('toggle-label');
+
+function applyDarkMode(isDark) {
+    document.body.classList.toggle('dark', isDark);
+    toggleLabel.textContent = isDark ? 'Modo claro' : 'Modo escuro';
+    darkToggle.checked = isDark;
+}
+
+applyDarkMode(localStorage.getItem('darkMode') === 'true');
+
+darkToggle.addEventListener('change', function () {
+    const isDark = this.checked;
+    localStorage.setItem('darkMode', isDark);
+    applyDarkMode(isDark);
+});

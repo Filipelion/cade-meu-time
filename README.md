@@ -69,8 +69,8 @@ Este projeto está licenciado sob a Licença MIT.
 
 ## Disclaimer
 
-Este projeto foi criado e otimizado com a ajuda do ChatGPT da OpenAI.
+Este projeto foi criado e otimizado com a ajuda do ChatGPT da OpenAI e do Claude Code da Antropic.
 Esta extensão foi desenvolvida de maneira independente. Sem qualquer auxílio ou responsabilidade do Sport Club do Recife.
----
 
+---
 Desenvolvido por [Filipe Freitas] e [Victor Leuthier]
