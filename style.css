@@ -137,7 +137,7 @@ body {
     left: 13px;
 }
 
-/* Game match cards — same pattern as news/video cards */
+/* Game match cards */
 .game {
     background-color: var(--bg-card);
     padding: 15px;
@@ -149,15 +149,24 @@ body {
 
 .game:hover {
     transform: scale(1.05);
+}
+
+/* Red bg on hover — light mode only */
+body:not(.dark) .game:hover {
     background-color: #b80000;
 }
 
-.game:hover .home-team-name,
-.game:hover .away-team-name,
-.game:hover .vs-text,
-.game:hover .game-league,
-.game:hover .game-date {
+body:not(.dark) .game:hover .home-team-name,
+body:not(.dark) .game:hover .away-team-name,
+body:not(.dark) .game:hover .vs-text,
+body:not(.dark) .game:hover .game-league,
+body:not(.dark) .game:hover .game-date {
     color: #ffee03;
+}
+
+/* Dark mode hover — subtle lift */
+body.dark .game:hover {
+    background-color: #3a3a3a;
 }
 
 .game-teams {
@@ -165,6 +174,22 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
+}
+
+/* Each team half takes equal space; names are pushed toward VS */
+.home-team-div,
+.away-team-div {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.home-team-div {
+    justify-content: flex-end;
+}
+
+.away-team-div {
+    justify-content: flex-start;
 }
 
 .home-team-name,
@@ -177,10 +202,12 @@ body {
 .away-team-icon {
     width: 30px;
     height: auto;
+    flex-shrink: 0;
 }
 
 .home-team-icon {
     margin-right: 10px;
+    order: -1;
 }
 
 .away-team-icon {
@@ -188,8 +215,10 @@ body {
 }
 
 .vs-text {
-    margin: 0 8px;
+    margin: 0 10px;
     color: var(--text-secondary);
+    font-weight: bold;
+    flex-shrink: 0;
 }
 
 .game-info {
@@ -209,20 +238,6 @@ body {
     margin-bottom: 8px;
     color: var(--text-primary);
     font-weight: bold;
-}
-
-/* First match card: league title in red (light mode only) */
-.game:first-child .game-league {
-    color: #b80000;
-}
-
-body.dark .game:first-child .game-league {
-    color: var(--text-primary);
-}
-
-/* Restore yellow on hover for first card (overrides the red) */
-.game:first-child:hover .game-league {
-    color: #ffee03;
 }
 
 /* News / video lists */

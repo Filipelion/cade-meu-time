@@ -18,18 +18,30 @@ After any code change, reload the extension on the extensions page and reopen th
 
 ## Architecture
 
-There is no framework, bundler, or package manager. Everything is plain HTML/CSS/vanilla JS.
+No framework, bundler, or package manager. Plain HTML/CSS/ES modules.
 
-| File | Role |
-|---|---|
-| `manifest.json` | Extension config (MV3). Declares `activeTab` permission and registers `background.js` as a content script (runs in every page context but is also loaded by `popup.html`). |
-| `popup.html` | Extension popup UI. Three tabs: **Jogos**, **Notícias**, **Vídeos**. Tab switching and game data rendering happen via `background.js`. |
-| `background.js` | All JS logic — fetches upcoming game data, caches it in `localStorage` (24h TTL), renders game cards into `#games-list`, and handles tab switching. |
-| `style.css` | All styling for the popup. |
+```
+src/
+  popup.js              Entry point — wires everything together on DOMContentLoaded
+  services/
+    cache.js            localStorage read/write with 24h TTL (pure, no DOM — testable)
+    gamesApi.js         fetch() + DOMParser scraping of placardefutebol.com.br (testable)
+  ui/
+    renderer.js         Builds and injects game card DOM nodes into #games-list
+    tabs.js             Tab switching logic
+    darkMode.js         Dark mode toggle with localStorage persistence
+popup.html              Shell — three tabs (Jogos / Notícias / Vídeos), loads src/popup.js as module
+style.css               All popup styling, CSS variables for light/dark theme
+manifest.json           MV3 config — host_permissions for placardefutebol.com.br
+background.js           Retired (no longer loaded)
+```
+
+`src/services/` has no DOM dependency — safe to unit-test in Node or a browser test harness.
+`src/ui/` touches the DOM — integration/e2e tests needed.
 
 ## Data flow for the Jogos tab
 
-`fetchData()` in [background.js](background.js) scrapes `placardefutebol.com.br` via XHR and parses the HTML response with `DOMParser`. Scraped data (dates, leagues, team names, logo URLs) is stored as JSON in `localStorage` under the key `gamesData`, with `lastFetched` as the TTL timestamp. On the next popup open within 24h, the cached data is used directly.
+`loadGames()` in [src/popup.js](src/popup.js) checks `cache.js` first (24h TTL in `localStorage`). On miss, calls `gamesApi.fetchGames()` which does a `fetch()` to `placardefutebol.com.br` and parses the HTML response with `DOMParser`. Result is passed to `renderer.renderGames()` and stored in cache.
 
 CSS selectors used for scraping (brittle — upstream HTML changes will break them):
 - `.match__lg_card--datetime` — date/time
@@ -39,11 +51,8 @@ CSS selectors used for scraping (brittle — upstream HTML changes will break th
 
 ## Debugging
 
-Open the popup, then right-click the extension icon → "Inspecionar popup" to open DevTools for the popup context. `console.log` statements in `background.js` will appear there. Cache hits/misses are logged:
-- `"Usando dados do cache"` — served from localStorage
-- `"Cache expirado ou ausente. Fazendo nova requisição."` — fresh XHR
+Right-click extension icon → "Inspecionar popup" to open DevTools for the popup. Cache hits/misses log to console. To force a fresh fetch:
 
-To force a fresh fetch during development, clear `localStorage` in the popup DevTools console:
 ```js
 localStorage.clear()
 ```
