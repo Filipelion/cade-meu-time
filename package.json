@@ -1,0 +1,10 @@
+{
+  "name": "cade-meu-time",
+  "version": "1.6.1",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}
