@@ -160,7 +160,8 @@ body:not(.dark) .game:hover .home-team-name,
 body:not(.dark) .game:hover .away-team-name,
 body:not(.dark) .game:hover .vs-text,
 body:not(.dark) .game:hover .game-league,
-body:not(.dark) .game:hover .game-date {
+body:not(.dark) .game:hover .game-date,
+body:not(.dark) .game:hover .game-venue {
     color: #ffee03;
 }
 
@@ -231,6 +232,27 @@ body.dark .game:hover {
 .game-date {
     font-size: 12px;
     color: var(--text-secondary);
+}
+
+.game-venue {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.venue-icon {
+    width: 11px;
+    height: 11px;
+    fill: var(--text-secondary);
+    flex-shrink: 0;
+    transition: fill 0.2s;
+}
+
+body:not(.dark) .game:hover .venue-icon {
+    fill: #ffee03;
 }
 
 .game-league {
