@@ -165,9 +165,22 @@ body:not(.dark) .game:hover .game-venue {
     color: #ffee03;
 }
 
-/* Dark mode hover — subtle lift */
+/* Dark mode hover — same as news/video cards */
 body.dark .game:hover {
-    background-color: #3a3a3a;
+    background-color: #b80000;
+}
+
+body.dark .game:hover .home-team-name,
+body.dark .game:hover .away-team-name,
+body.dark .game:hover .vs-text,
+body.dark .game:hover .game-league,
+body.dark .game:hover .game-date,
+body.dark .game:hover .game-venue {
+    color: #ffee03;
+}
+
+body.dark .game:hover .venue-icon {
+    fill: #ffee03;
 }
 
 .game-teams {
