@@ -26,9 +26,11 @@ A Extensão do Chrome "Maior do Nordeste" é uma ferramenta que permite aos fãs
 
 ## Recursos
 
-- Obtenha informações e saiba mais sobre os detalhes dos próximos jogos do Sport.
-- Acesse as notícias mais recentes sobre o Sport Club do Recife.
-- Veja os últimos vídeos do canal TVSport e do Globo Esporte. 
+- Próximos jogos do Sport com data, horário e **local/estádio** de cada partida.
+- Botão de acesso rápido aos **Jogos Encerrados** no Globo Esporte.
+- **Modo escuro** com persistência de preferência.
+- Acesse os principais portais de notícias sobre o Sport Club do Recife.
+- Links rápidos para os canais de vídeo: TVSport (YouTube), Globo Esporte e Instagram oficial.
 
 ## Instalação
 
@@ -36,26 +38,58 @@ A Extensão do Chrome "Maior do Nordeste" é uma ferramenta que permite aos fãs
 2. Abra o Google Chrome.
 3. Acesse `chrome://extensions/` na barra de endereços.
 4. Ative o modo Desenvolvedor no canto superior direito da página.
-5. Clique em "Carregar sem compactação" e selecione a pasta raiz do projeto.
+5. Clique em "Carregar sem compactação" e selecione a pasta **`src/`** do projeto.
 6. A extensão será carregada e estará pronta para uso.
 
 ## Como Usar
 
 Após a instalação, você verá o ícone da extensão na barra de ferramentas do Chrome. Clique no ícone para abrir a extensão.
 
+### Jogos
+
+- Selecione a guia "Jogos" para ver os próximos jogos do Sport, com data, horário e local da partida.
+- Clique no botão "Jogos Encerrados" para ver o histórico no Globo Esporte.
+- Use o toggle no canto superior direito para alternar entre modo claro e escuro.
+
 ### Notícias
 
-- Selecione a guia "Notícias" para visualizar as notícias mais recentes sobre o Sport Club do Recife.
-- Clique em uma notícia para ler o artigo completo.
+- Selecione a guia "Notícias" para acessar os principais portais de cobertura do Sport Club do Recife.
 
-### Próximos Jogos
+### Vídeos
 
-- Selecione a guia "Próximos Jogos" para obter informações sobre os próximos jogos do Sport.
-- Os detalhes dos jogos, incluindo datas e horários, serão exibidos.
+- Selecione a guia "Vídeos" para acessar os canais de vídeo do Sport (YouTube, Globo Esporte e Instagram).
+
+## Estrutura do Projeto
+
+```
+src/                  ← pasta a ser carregada no Chrome
+  manifest.json
+  popup.html
+  style.css
+  icon.png
+  popup.js
+  services/
+    cache.js          ← cache com TTL de 24h em localStorage
+    gamesApi.js       ← scraping do placardefutebol.com.br
+  ui/
+    renderer.js       ← renderização dos cards de jogos
+    tabs.js           ← lógica de troca de abas
+    darkMode.js       ← toggle de modo escuro
+tests/                ← testes Playwright (não incluídos na extensão)
+```
+
+## Desenvolvimento e Testes
+
+O projeto usa [Playwright](https://playwright.dev/) para testes end-to-end da extensão.
+
+```bash
+npm install
+npx playwright test
+```
+
+Os testes cobrem: alternância de modo escuro, troca de abas, efeitos de hover (modo claro e escuro) e todos os hiperlinks.
 
 ## Contribuição
-
-Ficaríamos felizes com sua contribuição para a extensão. Se deseja colaborar, siga estas etapas:
 
 1. Faça um fork do repositório.
 2. Crie uma branch para sua nova funcionalidade: `git checkout -b feature/nova-funcionalidade`.
@@ -69,7 +103,7 @@ Este projeto está licenciado sob a Licença MIT.
 
 ## Disclaimer
 
-Este projeto foi criado e otimizado com a ajuda do ChatGPT da OpenAI e do Claude Code da Antropic.
+Este projeto foi criado e otimizado com a ajuda do ChatGPT da OpenAI e do Claude Code da Anthropic.
 Esta extensão foi desenvolvida de maneira independente. Sem qualquer auxílio ou responsabilidade do Sport Club do Recife.
 
 ---
