@@ -20,9 +20,16 @@ async function setup(page, extensionId) {
   await page.route(/maiordonordeste\.com\.br\/api\/v1\/numeros/, (r) =>
     r.fulfill({ contentType: 'application/json', headers: CORS, body: FAKE_SOCIOS_JSON })
   );
+  
+  // Safety net: intercept any GA4 request that slips through before _ga_disabled is set
+  await page.route(/google-analytics\.com/, (r) => r.fulfill({ status: 204, body: '' }));
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  await page.evaluate(() => localStorage.clear());
+  await page.evaluate(() => {
+    localStorage.clear();
+    // Prevents analytics.js from firing trackEvent() calls during tests
+    localStorage.setItem('_ga_disabled', '1');
+  });
   await page.reload();
   await page.addStyleTag({
     content: '*, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; }',
