@@ -1,6 +1,9 @@
-export function initTabs() {
+export function initTabs(trackEvent) {
   document.querySelectorAll('.tab').forEach((tab) => {
-    tab.addEventListener('click', () => activateTab(tab.id));
+    tab.addEventListener('click', () => {
+      activateTab(tab.id);
+      trackEvent?.('tab_click', { tab: tab.id.replace('tab-', '') });
+    });
   });
 }
 

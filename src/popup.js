@@ -4,13 +4,15 @@ import { fetchSocios } from './services/sociosApi.js';
 import { renderGames, renderFinishedGames } from './ui/renderer.js';
 import { initTabs } from './ui/tabs.js';
 import { initDarkMode } from './ui/darkMode.js';
+import { trackEvent } from './analytics.js';
 
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
-  initTabs();
+  initTabs(trackEvent);
   initDarkMode();
   document.getElementById('version-label').textContent = `v${chrome.runtime.getManifest().version}`;
+  trackEvent('page_view');
   await loadGames();
   initFinishedGamesToggle();
   loadSocios();
@@ -47,6 +49,8 @@ function initFinishedGamesToggle() {
     panel.style.display = isVisible ? 'none' : 'block';
     gamesList.style.display = isVisible ? 'block' : 'none';
     btn.classList.toggle('active', !isVisible);
+
+    trackEvent('finished_games_toggle', { action: isVisible ? 'hide' : 'show' });
 
     if (!isVisible && panel.children.length === 0) {
       await loadFinishedGames(panel);
