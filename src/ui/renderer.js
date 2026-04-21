@@ -75,8 +75,58 @@ function buildVsEl() {
 }
 
 function formatDate(parts) {
+  if (!parts || parts.length === 0) return '';
   const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   const time = parts[parts.length - 1];
   if (parts.length === 2) return `${capitalize(parts[0])} às ${time}`;
   return `${capitalize(parts[0])} ${parts[1]} às ${time}`;
+}
+
+export function renderFinishedGames(data, container) {
+  container.innerHTML = '';
+  for (let i = 0; i < data.team_home.length; i++) {
+    container.appendChild(buildFinishedGameCard(data, i));
+  }
+}
+
+function buildFinishedGameCard(data, i) {
+  const href = data.links[i]
+    ? (data.links[i].startsWith('http') ? data.links[i] : `https://www.placardefutebol.com.br${data.links[i]}`)
+    : '#';
+
+  const card = document.createElement('a');
+  card.className = 'game game--finished';
+  card.href = href;
+  card.target = '_blank';
+  card.rel = 'noopener noreferrer';
+  card.title = 'Veja os detalhes';
+
+  const header = document.createElement('div');
+  header.className = 'finished-header';
+
+  const league = document.createElement('span');
+  league.className = 'game-league';
+  league.textContent = data.campeonato[i];
+
+  const date = document.createElement('span');
+  date.className = 'finished-date';
+  date.textContent = data.datas[i];
+
+  header.append(league, date);
+
+  const teams = document.createElement('div');
+  teams.className = 'game-teams';
+
+  const score = document.createElement('span');
+  score.className = 'score-text';
+  score.textContent = data.scoreboard[i] || '-';
+
+  teams.append(
+    buildTeamEl(data.team_home[i], data.img_src_home[i], 'home'),
+    score,
+    buildTeamEl(data.team_away[i], data.img_src_away[i], 'away'),
+  );
+
+  card.append(header, teams);
+  return card;
 }

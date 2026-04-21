@@ -32,7 +32,7 @@ body.dark {
 
 body {
     font-family: "Roboto Condensed", Arial, sans-serif;
-    padding: 20px;
+    padding: 8px;
     background: var(--bg-body);
     transition: background 0.2s;
 }
@@ -159,6 +159,7 @@ body:not(.dark) .game:hover {
 body:not(.dark) .game:hover .home-team-name,
 body:not(.dark) .game:hover .away-team-name,
 body:not(.dark) .game:hover .vs-text,
+body:not(.dark) .game:hover .score-text,
 body:not(.dark) .game:hover .game-league,
 body:not(.dark) .game:hover .game-date,
 body:not(.dark) .game:hover .game-venue {
@@ -173,6 +174,7 @@ body.dark .game:hover {
 body.dark .game:hover .home-team-name,
 body.dark .game:hover .away-team-name,
 body.dark .game:hover .vs-text,
+body.dark .game:hover .score-text,
 body.dark .game:hover .game-league,
 body.dark .game:hover .game-date,
 body.dark .game:hover .game-venue {
@@ -233,6 +235,52 @@ body.dark .game:hover .venue-icon {
     color: var(--text-secondary);
     font-weight: bold;
     flex-shrink: 0;
+}
+
+.score-text {
+    margin: 0 10px;
+    color: var(--text-primary);
+    font-weight: bold;
+    font-size: 15px;
+    flex-shrink: 0;
+    letter-spacing: 1px;
+}
+
+/* Finished match cards */
+a.game--finished {
+    display: block;
+    text-decoration: none;
+    border-left: 3px solid #b80000;
+}
+
+.finished-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+
+.finished-header .game-league {
+    margin-bottom: 0;
+    font-size: 12px;
+}
+
+.finished-date {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: normal;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+body:not(.dark) .game--finished:hover .finished-date,
+body.dark .game--finished:hover .finished-date {
+    color: #ffee03;
+}
+
+body:not(.dark) .game--finished:hover .score-text,
+body.dark .game--finished:hover .score-text {
+    color: #ffee03;
 }
 
 .game-info {
@@ -321,18 +369,31 @@ body:not(.dark) .game:hover .venue-icon {
     transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
     cursor: pointer;
     text-decoration: none;
+    border: none;
+    font-family: inherit;
 }
 
-.game-card-finished:hover {
+.game-card-finished:hover,
+.game-card-finished.active {
     transform: scale(1.05);
     background-color: #b80000;
+}
+
+.game-card-finished.active {
+    transform: none;
+}
+
+.game-card-finished.active .game-card-finished-text,
+.game-card-finished.active svg {
+    color: #ffee03;
+    fill: #ffee03;
 }
 
 /* Image icons (rounded photos) */
 img.news-icon,
 img.video-icon {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     margin-right: 10px;
     border-radius: 50%;
     object-fit: cover;
@@ -342,8 +403,8 @@ img.video-icon {
 /* SVG icons (flat icons — no circular crop) */
 svg.news-icon,
 svg.video-icon {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     margin-right: 10px;
     fill: var(--icon-fill);
     flex-shrink: 0;
@@ -389,4 +450,60 @@ svg.video-icon {
 .video-card:hover svg.video-icon,
 .game-card-finished:hover svg {
     fill: #ffee03;
+}
+
+.loading-text {
+    text-align: center;
+    padding: 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+#finished-games-list {
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--shadow);
+}
+
+/* Sócios footnote */
+.socios-footnote {
+    display: block;
+    margin-top: 8px;
+    padding: 6px 10px;
+    background-color: #b80000;
+    border-radius: 0 0 8px 8px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.socios-footnote:hover {
+    background-color: #8a0000;
+}
+
+.socios-footnote-content {
+    display: block;
+    font-size: 11px;
+    color: #ffee03;
+    font-weight: bold;
+    letter-spacing: 0.3px;
+}
+
+.socios-cta {
+    display: block;
+    font-size: 11px;
+    color: #ffee03;
+    font-weight: bold;
+    letter-spacing: 0.3px;
+}
+
+.version-label {
+    text-align: right;
+    font-size: 9px;
+    color: var(--text-secondary);
+    opacity: 0.45;
+    margin-top: 6px;
+    padding-right: 2px;
+    user-select: none;
 }

@@ -49,6 +49,19 @@ CSS selectors used for scraping (brittle — upstream HTML changes will break th
 - `.match__lg_card--ht-name.text` / `.match__lg_card--at-name.text` — team names
 - `.match__lg_card--ht-logo` / `.match__lg_card--at-logo` — team logos
 
+## Testing
+
+Tests use Playwright and load the real extension into a headless Chrome instance. Network calls to `placardefutebol.com.br` are intercepted with `page.route()` — no real requests are made.
+
+```bash
+npm install          # first time only
+npx playwright install chromium   # first time only
+npm test             # run all tests
+npx playwright test --grep "Dark mode"   # run a single describe block
+```
+
+The test fixture in `tests/popup.spec.js` uses a shared persistent Chrome context so the extension ID is resolved once in `beforeAll`. Each test gets a fresh page and calls `localStorage.clear()` + reload to avoid state bleed between tests.
+
 ## Debugging
 
 Right-click extension icon → "Inspecionar popup" to open DevTools for the popup. Cache hits/misses log to console. To force a fresh fetch:

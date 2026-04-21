@@ -21,3 +21,22 @@ export function clearCache() {
   localStorage.removeItem(CACHE_KEY);
   localStorage.removeItem(CACHE_TS_KEY);
 }
+
+const FINISHED_CACHE_KEY = 'finishedGamesData_v2';
+const FINISHED_CACHE_TS_KEY = 'lastFetchedFinished';
+const FINISHED_CACHE_TTL_MS = 60 * 60 * 1000;
+
+export function isFinishedCacheValid() {
+  const lastFetched = localStorage.getItem(FINISHED_CACHE_TS_KEY);
+  return !!lastFetched && Date.now() - Number(lastFetched) < FINISHED_CACHE_TTL_MS;
+}
+
+export function getCachedFinishedGames() {
+  const raw = localStorage.getItem(FINISHED_CACHE_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+
+export function setCachedFinishedGames(data) {
+  localStorage.setItem(FINISHED_CACHE_KEY, JSON.stringify(data));
+  localStorage.setItem(FINISHED_CACHE_TS_KEY, Date.now().toString());
+}
