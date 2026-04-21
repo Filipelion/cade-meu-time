@@ -29,6 +29,11 @@ test.describe('Sócios footnote', () => {
     await page.route(/maiordonordeste\.com\.br\/api\/v1\/numeros/, (r) =>
       r.fulfill({ status: 500, body: '' })
     );
+    // Clear socios cache so the reload hits the API (and gets the 500) instead of returning cached text
+    await page.evaluate(() => {
+      localStorage.removeItem('sociosData');
+      localStorage.removeItem('lastFetchedSocios');
+    });
     await page.reload();
     await page.waitForSelector('.game');
     await page.waitForFunction(() => {
