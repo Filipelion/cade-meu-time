@@ -1,4 +1,4 @@
-import { isCacheValid, getCachedGames, setCachedGames, isFinishedCacheValid, getCachedFinishedGames, setCachedFinishedGames } from './services/cache.js';
+import { isCacheValid, getCachedGames, setCachedGames, isFinishedCacheValid, getCachedFinishedGames, setCachedFinishedGames, isSociosCacheValid, getCachedSocios, setCachedSocios } from './services/cache.js';
 import { fetchGames, fetchFinishedGames } from './services/gamesApi.js';
 import { fetchSocios } from './services/sociosApi.js';
 import { renderGames, renderFinishedGames } from './ui/renderer.js';
@@ -61,8 +61,17 @@ function initFinishedGamesToggle() {
 async function loadSocios() {
   const el = document.getElementById('footnote-socios-content');
   try {
+    if (isSociosCacheValid()) {
+      const cached = getCachedSocios();
+      if (cached) {
+        el.textContent = cached;
+        return;
+      }
+    }
     const data = await fetchSocios();
-    el.textContent = data.Texto ?? data.texto ?? 'maiordonordeste.com.br';
+    const text = data.Texto ?? data.texto ?? 'maiordonordeste.com.br';
+    setCachedSocios(text);
+    el.textContent = text;
   } catch {
     el.textContent = 'maiordonordeste.com.br';
   }

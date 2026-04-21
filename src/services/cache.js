@@ -40,3 +40,22 @@ export function setCachedFinishedGames(data) {
   localStorage.setItem(FINISHED_CACHE_KEY, JSON.stringify(data));
   localStorage.setItem(FINISHED_CACHE_TS_KEY, Date.now().toString());
 }
+
+const SOCIOS_CACHE_KEY = 'sociosData';
+const SOCIOS_CACHE_TS_KEY = 'lastFetchedSocios';
+const SOCIOS_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+export function isSociosCacheValid() {
+  const lastFetched = localStorage.getItem(SOCIOS_CACHE_TS_KEY);
+  return !!lastFetched && Date.now() - Number(lastFetched) < SOCIOS_CACHE_TTL_MS;
+}
+
+export function getCachedSocios() {
+  const raw = localStorage.getItem(SOCIOS_CACHE_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+
+export function setCachedSocios(data) {
+  localStorage.setItem(SOCIOS_CACHE_KEY, JSON.stringify(data));
+  localStorage.setItem(SOCIOS_CACHE_TS_KEY, Date.now().toString());
+}
