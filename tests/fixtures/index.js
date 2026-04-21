@@ -12,6 +12,7 @@ const test = base.extend({
     const context = await chromium.launchPersistentContext(userDataDir, {
       headless: false,
       args: [
+        '--disable-features=Translate',
         `--disable-extensions-except=${EXTENSION_PATH}`,
         `--load-extension=${EXTENSION_PATH}`,
       ],
