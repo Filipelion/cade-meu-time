@@ -4,40 +4,64 @@
 
 ## 1. Dados coletados
 
-Esta extensão **não coleta, armazena, transmite ou compartilha nenhum dado pessoal** do usuário.
+Esta extensão **não coleta dados pessoais identificáveis** do usuário.
+
+São coletados **dados de uso anônimos** por meio do Google Analytics 4 (GA4), descritos na seção 4.
 
 ## 2. Armazenamento local
 
-A extensão utiliza o `localStorage` do próprio navegador exclusivamente para:
+A extensão utiliza o `localStorage` e o `sessionStorage` do próprio navegador exclusivamente para:
 
 | Dado | Finalidade | Expiração |
 |---|---|---|
 | Preferência de modo escuro | Lembrar a escolha do usuário entre modo claro e escuro | Indefinida (preferência do usuário) |
 | Cache de jogos | Evitar requisições repetidas ao placardefutebol.com.br | 24 horas |
+| Cache de jogos encerrados | Evitar requisições repetidas ao placardefutebol.com.br | 1 hora |
+| Cache de sócios | Evitar requisições repetidas à API do maiordonordeste.com.br | 7 dias |
+| `_ga_cid` (client ID aleatório) | Identificar o dispositivo de forma anônima no GA4 | Indefinida |
+| `_ga_sid` (session ID) | Agrupar eventos da mesma sessão de uso no GA4 | Duração da sessão do navegador |
 
-Esses dados nunca saem do dispositivo do usuário e não são acessíveis por terceiros.
+Esses dados permanecem no dispositivo do usuário e não são acessíveis por terceiros, exceto o `_ga_cid` e `_ga_sid`, que são enviados ao Google Analytics conforme descrito na seção 4.
 
 ## 3. Requisições externas
 
-A extensão realiza requisições às seguintes URLs para obter dados de jogos:
+A extensão realiza requisições às seguintes URLs:
 
-- `https://www.placardefutebol.com.br/time/sport/proximos-jogos` — listagem dos próximos jogos
-- `https://www.placardefutebol.com.br/{jogo}` — detalhes individuais de cada partida (local/estádio)
+| URL | Finalidade |
+|---|---|
+| `https://www.placardefutebol.com.br/time/sport/proximos-jogos` | Listagem dos próximos jogos |
+| `https://www.placardefutebol.com.br/{jogo}` | Detalhes individuais de cada partida |
+| `https://maiordonordeste.com.br/api/v1/numeros` | Número atualizado de sócios do clube |
+| `https://www.google-analytics.com/g/collect` | Envio de eventos de uso anônimos ao GA4 |
 
-Nenhum dado do usuário é enviado nessas requisições. São chamadas de leitura pública, equivalentes a visitar o site no navegador.
+As requisições ao placardefutebol.com.br e maiordonordeste.com.br são chamadas de leitura pública — nenhum dado do usuário é enviado.
 
-## 4. Links externos
+## 4. Google Analytics (GA4)
+
+A extensão utiliza o Google Analytics 4 para medir o uso de forma agregada e anônima. Os seguintes eventos são registrados:
+
+| Evento | Quando ocorre |
+|---|---|
+| `page_view` | Ao abrir a extensão |
+| `tab_click` | Ao alternar entre as abas Jogos, Notícias e Vídeos |
+| `finished_games_toggle` | Ao abrir ou fechar a lista de jogos encerrados |
+
+Cada evento inclui um `client_id` gerado aleatoriamente (sem vínculo com nome, e-mail ou qualquer dado pessoal) e um `session_id` de sessão. Nenhum dado de localização, histórico de navegação ou identificação pessoal é transmitido.
+
+Os dados coletados pelo Google Analytics estão sujeitos à [Política de Privacidade do Google](https://policies.google.com/privacy).
+
+## 5. Links externos
 
 A extensão exibe links para sites de terceiros (Globo Esporte, Sport Club do Recife, Folha de Pernambuco, JC, Meu Sport, YouTube, Instagram). Ao clicar em um link, o usuário é direcionado ao site externo, que possui sua própria política de privacidade.
 
-## 5. Permissões declaradas no manifesto
+## 6. Permissões declaradas no manifesto
 
 | Permissão | Motivo |
 |---|---|
-| `host_permissions: placardefutebol.com.br` | Necessária para buscar os dados de jogos e locais das partidas |
+| `host_permissions: placardefutebol.com.br` | Buscar dados de jogos e locais das partidas |
+| `host_permissions: maiordonordeste.com.br` | Buscar o número atualizado de sócios do clube |
+| `host_permissions: google-analytics.com` | Enviar eventos de uso anônimos ao GA4 |
 
-Nenhuma outra permissão é solicitada.
+## 7. Contato
 
-## 6. Contato
-
-Dúvidas ou sugestões sobre esta política podem ser criadas issues em [https://github.com/Filipelion/cade-meu-time/issues/new](https://github.com/Filipelion/cade-meu-time/issues/new)
+Dúvidas ou sugestões sobre esta política podem ser enviadas via [https://github.com/Filipelion/cade-meu-time/issues/new](https://github.com/Filipelion/cade-meu-time/issues/new)
