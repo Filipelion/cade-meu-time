@@ -5,19 +5,25 @@
 A Extensão do Chrome "Maior do Nordeste" é uma ferramenta que permite aos fãs do [Sport Club do Recife](https://sportrecife.com.br/) acompanhar as notícias mais recentes e os próximos jogos de seu time favorito diretamente no navegador.
 
 <p align="center">
-  <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/proximosJogos.png" alt="Captura de tela da extensão - "Próximos jogos"">
+  <a rel="noreferrer noopener" href="https://chromewebstore.google.com/detail/maior-do-nordeste-sport-c/lcjnhdjijcehakhghaflnocpmmeacilm">
+    <img alt="Disponível na Chrome Web Store" src="https://img.shields.io/badge/Instalar%20no%20Chrome-E30613.svg?&style=for-the-badge&logo=google-chrome&logoColor=white">
+  </a>
+</p>
+
+<p align="center">
+  <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/proximosJogos.png" alt="Captura de tela da extensão - &quot;Próximos jogos&quot;">
 </p>
 <p align="center">
   Captura de tela da extensão - "Próximos jogos"
 </p>
 <p align="center">
-  <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/noticias.png" alt="Captura de tela da extensão - "Noticias"">
+  <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/noticias.png" alt="Captura de tela da extensão - &quot;Noticias&quot;">
 </p>
 <p align="center">
   Captura de tela da extensão - "Noticias"
 </p>
 <p align="center">
-  <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/videos.png" alt="Captura de tela da extensão - "Videos"">
+  <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/videos.png" alt="Captura de tela da extensão - &quot;Videos&quot;">
 </p>
 <p align="center">
   Captura de tela da extensão - "Videos"
@@ -26,13 +32,24 @@ A Extensão do Chrome "Maior do Nordeste" é uma ferramenta que permite aos fãs
 
 ## Recursos
 
-- Próximos jogos do Sport com data, horário e **local/estádio** de cada partida.
+- Próximos jogos do Sport com **data, horário e competição** de cada partida.
 - Botão de acesso rápido aos **Jogos Encerrados** no Globo Esporte.
 - **Modo escuro** com persistência de preferência.
+- **Contador de Sócios** — exibe o número atualizado de sócios do clube.
 - Acesse os principais portais de notícias sobre o Sport Club do Recife.
 - Links rápidos para os canais de vídeo: TVSport (YouTube), Globo Esporte e Instagram oficial.
 
 ## Instalação
+
+A forma mais simples é instalar pela Chrome Web Store:
+
+<p align="center">
+  <a rel="noreferrer noopener" href="https://chromewebstore.google.com/detail/maior-do-nordeste-sport-c/lcjnhdjijcehakhghaflnocpmmeacilm">
+    <img alt="Disponível na Chrome Web Store" src="https://img.shields.io/badge/Instalar%20no%20Chrome-E30613.svg?&style=for-the-badge&logo=google-chrome&logoColor=white">
+  </a>
+</p>
+
+Para carregar o código-fonte diretamente (modo desenvolvedor):
 
 1. Clone o repositório ou faça o download do código-fonte.
 2. Abra o Google Chrome.
