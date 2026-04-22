@@ -20,6 +20,9 @@ A Extensão do Chrome "Maior do Nordeste" é uma ferramenta que permite aos fãs
   <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/jogosEncerrados.png" alt="Captura de tela da extensão - &quot;Jogos Encerrados&quot;">
 </p>
 <p align="center">
+  Captura de tela da extensão - "Jogos Encerrados"
+</p>
+<p align="center">
   <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/noticias.png" alt="Captura de tela da extensão - &quot;Noticias&quot;">
 </p>
 <p align="center">
