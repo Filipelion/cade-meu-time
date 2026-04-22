@@ -4,9 +4,13 @@ on:
   push:
     paths-ignore:
       - '**.md'
+      - '**.yml'
+      - '**.png'
   pull_request:
     paths-ignore:
       - '**.md'
+      - '**.yml'
+      - '**.png'
   workflow_call:
 
 jobs:
