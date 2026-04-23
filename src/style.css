@@ -32,7 +32,8 @@ body.dark {
 
 body {
     font-family: "Roboto Condensed", Arial, sans-serif;
-    padding: 8px;
+    padding: 8px 4px;
+    min-width: 250px;
     background: var(--bg-body);
     transition: background 0.2s;
 }
@@ -185,6 +186,11 @@ body.dark .game:hover .venue-icon {
     fill: #ffee03;
 }
 
+body:not(.dark) .game:hover .game-broadcast,
+body.dark .game:hover .game-broadcast {
+    color: #ffee03;
+}
+
 .game-teams {
     display: flex;
     align-items: center;
@@ -250,7 +256,11 @@ body.dark .game:hover .venue-icon {
 a.game--finished {
     display: block;
     text-decoration: none;
-    border-left: 3px solid #b80000;
+    border-left: 3px solid #ffee03;
+}
+
+body.dark a.game--finished {
+    border-left-color: #b80000;
 }
 
 .finished-header {
