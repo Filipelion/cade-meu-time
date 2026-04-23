@@ -3,5 +3,6 @@
 skills-lock.json
 node_modules
 test-results/
+chrome_store/
 *.zip
 *.png
