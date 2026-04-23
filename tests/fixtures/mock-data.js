@@ -12,6 +12,7 @@ const FAKE_LISTING_HTML = `<!DOCTYPE html><html><body>
 const FAKE_DETAIL_HTML = `<!DOCTYPE html><html><body>
 <div class="match-details">
   <p><img src="/images/local.png" alt="Ícone de Localização">Arena de Pernambuco (São Lourenço da Mata, PE)</p>
+  <p><img src="/images/tv.png" alt="Ícone de TV" title="Transmissão"><strong>SporTV (7 dias grátis), Premiere</strong></p>
 </div>
 </body></html>`;
 
