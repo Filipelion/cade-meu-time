@@ -1,4 +1,4 @@
-const CACHE_KEY = 'gamesData';
+const CACHE_KEY = 'gamesData_v3';
 const CACHE_TS_KEY = 'lastFetched';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 

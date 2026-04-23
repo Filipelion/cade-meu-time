@@ -25,29 +25,42 @@ export function parseGamesFromHTML(html) {
   };
 }
 
-export function parseVenueFromHTML(html) {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const details = doc.querySelector('div.match-details');
-  if (!details) return '';
-  for (const p of details.querySelectorAll('p')) {
-    if (p.querySelector('img[src*="local.png"]')) {
-      return p.textContent.trim();
-    }
-  }
-  return '';
+function normalizeBroadcast(text) {
+  const afterPrep = text.match(/ n[ao] (.+)$/);
+  const channels = afterPrep ? afterPrep[1] : text;
+  return channels.replace(/\s*\([^)]*\)/g, '').trim();
 }
 
-async function fetchVenue(relativeUrl) {
-  if (!relativeUrl) return '';
+export function parseMatchDetailsFromHTML(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+
+  let venue = '';
+  let broadcast = '';
+
+  for (const p of doc.querySelectorAll('p')) {
+    if (!venue && p.querySelector('img[src*="local.png"]')) {
+      venue = p.textContent.trim();
+    }
+    if (!broadcast && p.querySelector('img[src*="tv.png"]')) {
+      broadcast = normalizeBroadcast(p.querySelector('strong')?.textContent.trim() ?? p.textContent.trim());
+    }
+    if (venue && broadcast) break;
+  }
+
+  return { venue, broadcast };
+}
+
+async function fetchMatchDetails(relativeUrl) {
+  if (!relativeUrl) return { venue: '', broadcast: '' };
   try {
     const url = relativeUrl.startsWith('http')
       ? relativeUrl
       : `https://www.placardefutebol.com.br${relativeUrl}`;
     const res = await fetch(url);
-    if (!res.ok) return '';
-    return parseVenueFromHTML(await res.text());
+    if (!res.ok) return { venue: '', broadcast: '' };
+    return parseMatchDetailsFromHTML(await res.text());
   } catch {
-    return '';
+    return { venue: '', broadcast: '' };
   }
 }
 
@@ -57,8 +70,12 @@ export async function fetchGames() {
   const html = await response.text();
   const data = parseGamesFromHTML(html);
 
-  const local = await Promise.all(data.links.map(fetchVenue));
-  return { ...data, local };
+  const details = await Promise.all(data.links.map(fetchMatchDetails));
+  return {
+    ...data,
+    local:     details.map((d) => d.venue),
+    broadcast: details.map((d) => d.broadcast),
+  };
 }
 
 export function parseFinishedGamesFromHTML(html) {
