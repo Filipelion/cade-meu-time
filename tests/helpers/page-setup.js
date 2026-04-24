@@ -38,7 +38,7 @@ async function setup(page, extensionId) {
 }
 
 async function enableDark(page) {
-  await page.locator('label.theme-toggle').click();
+  await page.locator('label[title="Alternar modo escuro"]').click();
   await page.waitForFunction(() => document.body.classList.contains('dark'));
 }
 

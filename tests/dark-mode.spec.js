@@ -16,7 +16,7 @@ test.describe('Dark mode', () => {
   test('disables on second click', async ({ page, extensionId }) => {
     await setup(page, extensionId);
     await enableDark(page);
-    await page.locator('label.theme-toggle').click();
+    await page.locator('label[title="Alternar modo escuro"]').click();
     await page.waitForFunction(() => !document.body.classList.contains('dark'));
     expect(await page.evaluate(() => document.body.classList.contains('dark'))).toBe(false);
   });
