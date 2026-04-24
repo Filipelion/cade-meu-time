@@ -41,6 +41,25 @@ export function setCachedFinishedGames(data) {
   localStorage.setItem(FINISHED_CACHE_TS_KEY, Date.now().toString());
 }
 
+const TICKETS_CACHE_KEY = 'ticketsData';
+const TICKETS_CACHE_TS_KEY = 'lastFetchedTickets';
+const TICKETS_CACHE_TTL_MS = 30 * 60 * 1000;
+
+export function isTicketsCacheValid() {
+  const lastFetched = localStorage.getItem(TICKETS_CACHE_TS_KEY);
+  return !!lastFetched && Date.now() - Number(lastFetched) < TICKETS_CACHE_TTL_MS;
+}
+
+export function getCachedTickets() {
+  const raw = localStorage.getItem(TICKETS_CACHE_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+
+export function setCachedTickets(data) {
+  localStorage.setItem(TICKETS_CACHE_KEY, JSON.stringify(data));
+  localStorage.setItem(TICKETS_CACHE_TS_KEY, Date.now().toString());
+}
+
 const SOCIOS_CACHE_KEY = 'sociosData';
 const SOCIOS_CACHE_TS_KEY = 'lastFetchedSocios';
 const SOCIOS_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;

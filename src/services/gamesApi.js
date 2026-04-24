@@ -15,7 +15,7 @@ export function parseGamesFromHTML(html) {
   const all = (selector) => Array.from(doc.querySelectorAll(selector));
 
   return {
-    datas:        all(SELECTORS.datetime).map((el) => el.textContent.trim().split(' ')),
+    datas:        all(SELECTORS.datetime).map((el) => el.textContent.trim().split(/\s+/)),
     campeonato:   all(SELECTORS.league).map((el) => el.textContent.trim()),
     team_home:    all(SELECTORS.homeName).map((el) => el.textContent.trim()),
     team_away:    all(SELECTORS.awayName).map((el) => el.textContent.trim()),

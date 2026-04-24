@@ -1,21 +1,30 @@
-import { isCacheValid, getCachedGames, setCachedGames, isFinishedCacheValid, getCachedFinishedGames, setCachedFinishedGames, isSociosCacheValid, getCachedSocios, setCachedSocios } from './services/cache.js';
+import { isCacheValid, getCachedGames, setCachedGames, isFinishedCacheValid, getCachedFinishedGames, setCachedFinishedGames, isSociosCacheValid, getCachedSocios, setCachedSocios, isTicketsCacheValid, getCachedTickets, setCachedTickets } from './services/cache.js';
 import { fetchGames, fetchFinishedGames } from './services/gamesApi.js';
+import { fetchLiveGames } from './services/liveGamesApi.js';
 import { fetchSocios } from './services/sociosApi.js';
-import { renderGames, renderFinishedGames } from './ui/renderer.js';
+import { fetchTickets } from './services/ticketsApi.js';
+import { renderGames, renderFinishedGames, renderLiveGames, renderTickets } from './ui/renderer.js';
 import { initTabs } from './ui/tabs.js';
 import { initDarkMode } from './ui/darkMode.js';
 import { trackEvent } from './analytics.js';
 
 document.addEventListener('DOMContentLoaded', init);
 
+const prevScores = {};
+
 async function init() {
   initTabs(trackEvent);
   initDarkMode();
+  initCountdownToggle();
   document.getElementById('version-label').textContent = `v${chrome.runtime.getManifest().version}`;
   trackEvent('page_view');
-  await loadGames();
+  const gamesData = await loadGames();
+  initCountdown(gamesData);
+  pollLiveGames();
+  setInterval(pollLiveGames, 60_000);
   initFinishedGamesToggle();
   loadSocios();
+  loadTickets(gamesData);
 }
 
 async function loadGames() {
@@ -24,7 +33,7 @@ async function loadGames() {
     if (cached) {
       console.log('Usando dados do cache');
       renderGames(cached);
-      return;
+      return cached;
     }
   }
 
@@ -33,9 +42,157 @@ async function loadGames() {
     const data = await fetchGames();
     setCachedGames(data);
     renderGames(data);
+    return data;
   } catch (err) {
     console.error('Erro ao buscar jogos:', err);
+    return null;
   }
+}
+
+function parseGameDate(parts) {
+  if (!parts || parts.length === 0) return null;
+  const joined = parts.join(' ');
+  // Time: "21:30" or "21h30"
+  const timeMatch = joined.match(/(\d{1,2})[h:](\d{2})/);
+  if (!timeMatch) return null;
+  const h = parseInt(timeMatch[1], 10);
+  const m = parseInt(timeMatch[2], 10);
+  const now = new Date();
+  // Date: "29/04" or "29/04/2026"
+  const dateMatch = joined.match(/(\d{2})\/(\d{2})(?:\/\d{4})?/);
+  if (dateMatch) {
+    const dd = parseInt(dateMatch[1], 10);
+    const mm = parseInt(dateMatch[2], 10);
+    const year = now.getFullYear();
+    const d = new Date(year, mm - 1, dd, h, m, 0, 0);
+    if (d < now) d.setFullYear(year + 1);
+    return d;
+  }
+  const first = parts[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const d = new Date(now);
+  d.setHours(h, m, 0, 0);
+  if (first === 'amanha') d.setTime(d.getTime() + 24 * 60 * 60 * 1000);
+  return d;
+}
+
+function initCountdownToggle() {
+  const toggle = document.getElementById('countdown-toggle');
+  const enabled = localStorage.getItem('showCountdown') === 'true';
+  toggle.checked = enabled;
+  toggle.addEventListener('change', () => {
+    localStorage.setItem('showCountdown', toggle.checked);
+    const el = document.getElementById('next-game-countdown');
+    if (el) el.style.display = toggle.checked ? 'block' : 'none';
+  });
+}
+
+function initCountdown(gamesData) {
+  if (!gamesData?.datas?.length) return;
+  const now = new Date();
+  const nextDate = gamesData.datas.map(parseGameDate).find((d) => d && d > now);
+  if (!nextDate) return;
+
+  const el = document.getElementById('next-game-countdown');
+  if (localStorage.getItem('showCountdown') === 'true') el.style.display = 'block';
+
+  function tick() {
+    const diff = nextDate - new Date();
+    if (diff <= 0) {
+      el.style.display = 'none';
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const pad = (n) => String(n).padStart(2, '0');
+    const text = days > 0
+      ? `${days}d ${pad(hours)}h ${pad(mins)}m`
+      : `${pad(hours)}h ${pad(mins)}m`;
+    el.textContent = `Próximo jogo em: ${text}`;
+  }
+
+  tick();
+  setInterval(tick, 60_000);
+}
+
+function isGamePossiblyLive(parts) {
+  if (!parts || parts.length === 0) return false;
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2, '0');
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const todayStr = `${dd}/${mm}`;
+  const isToday = parts[0].toLowerCase() === 'hoje' || parts.some((p) => p === todayStr);
+  if (!isToday) return false;
+  const timePart = parts.find((p) => /^\d{2}:\d{2}$/.test(p));
+  if (!timePart) return true;
+  const [h, m] = timePart.split(':').map(Number);
+  const kickoff = new Date(now);
+  kickoff.setHours(h, m, 0, 0);
+  const diffMin = (now - kickoff) / 60000;
+  return diffMin >= -15 && diffMin <= 130;
+}
+
+async function pollLiveGames() {
+  const container = document.getElementById('live-games-list');
+  const cached = getCachedGames();
+  if (!cached?.links?.length) {
+    container.style.display = 'none';
+    return;
+  }
+
+  const candidateIndices = cached.links
+    .map((_, i) => i)
+    .filter((i) => isGamePossiblyLive(cached.datas[i]));
+
+  if (candidateIndices.length === 0) {
+    renderLiveGames({ team_home: [], team_away: [], campeonato: [], img_src_home: [], img_src_away: [], score_home: [], score_away: [], minute: [], links: [] }, container);
+    return;
+  }
+
+  try {
+    const reloads = await fetchLiveGames(candidateIndices.map((i) => cached.links[i]));
+
+    const liveData = {
+      campeonato: [], team_home: [], team_away: [],
+      img_src_home: [], img_src_away: [],
+      score_home: [], score_away: [], minute: [], links: [],
+    };
+
+    reloads.forEach((r, idx) => {
+      const i = candidateIndices[idx];
+      if (!r?.isLive) return;
+      liveData.campeonato.push(cached.campeonato[i]);
+      liveData.team_home.push(cached.team_home[i]);
+      liveData.team_away.push(cached.team_away[i]);
+      liveData.img_src_home.push(cached.img_src_home[i]);
+      liveData.img_src_away.push(cached.img_src_away[i]);
+      liveData.score_home.push(r.score_home);
+      liveData.score_away.push(r.score_away);
+      liveData.minute.push(r.minute);
+      liveData.links.push(cached.links[i]);
+    });
+
+    for (let i = 0; i < liveData.links.length; i++) {
+      const key = liveData.links[i];
+      const score = `${liveData.score_home[i]}-${liveData.score_away[i]}`;
+      if (prevScores[key] !== undefined && prevScores[key] !== score) {
+        showGoalToast(liveData.team_home[i], liveData.score_home[i], liveData.team_away[i], liveData.score_away[i]);
+      }
+      prevScores[key] = score;
+    }
+
+    renderLiveGames(liveData, container);
+  } catch (err) {
+    console.error('Erro ao buscar jogos ao vivo:', err);
+  }
+}
+
+function showGoalToast(home, scoreHome, away, scoreAway) {
+  const toast = document.getElementById('goal-toast');
+  toast.textContent = `⚽ GOL! ${home} ${scoreHome} × ${scoreAway} ${away}`;
+  toast.classList.add('show');
+  clearTimeout(toast._hideTimer);
+  toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 5000);
 }
 
 function initFinishedGamesToggle() {
@@ -75,6 +232,56 @@ async function loadSocios() {
   } catch {
     el.textContent = 'maiordonordeste.com.br';
   }
+}
+
+async function loadTickets(gamesData) {
+  const tab = document.getElementById('tab-tickets');
+  const container = document.getElementById('tickets-list');
+  tab.style.display = '';
+
+  let data = null;
+  try {
+    if (isTicketsCacheValid()) data = getCachedTickets();
+    if (!data) {
+      data = await fetchTickets();
+      setCachedTickets(data);
+    }
+  } catch (err) {
+    console.error('Erro ao buscar ingressos:', err);
+  }
+
+  if (isNextGameHome(gamesData)) {
+    const enriched = gamesData ? {
+      campeonato: gamesData.campeonato[0],
+      team_home: gamesData.team_home[0],
+      team_away: gamesData.team_away[0],
+      img_src_home: gamesData.img_src_home[0],
+      img_src_away: gamesData.img_src_away[0],
+      datas: gamesData.datas[0],
+      local: gamesData.local?.[0] ?? null,
+      broadcast: gamesData.broadcast?.[0] ?? null,
+    } : {};
+    renderTickets(data, container, enriched);
+    return;
+  }
+
+  const nextHomeDate = data?.[0]?.data_hora
+    ? (() => {
+        const d = new Date(data[0].data_hora);
+        return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+      })()
+    : null;
+  container.innerHTML = `<div class="loading-text">${
+    nextHomeDate
+      ? `Próximo jogo é fora de casa, dia ${nextHomeDate} tem jogo na Ilha novamente!`
+      : 'Próximo jogo é fora de casa.'
+  }</div>`;
+}
+
+function isNextGameHome(gamesData) {
+  const venue = gamesData?.local?.[0];
+  if (!venue) return false;
+  return venue.includes('Ilha do Retiro') || venue.includes('Recife');
 }
 
 async function loadFinishedGames(panel) {

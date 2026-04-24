@@ -1,3 +1,83 @@
+export function renderTickets(games, container, enriched = {}) {
+  container.innerHTML = '';
+  if (!games || games.length === 0) return;
+
+  const game = games[0];
+  const buyUrl = `https://maiordonordeste.com.br/jogos/${game.id}/comprar`;
+  const localStr = game.local ? `${game.local.nome}, ${game.local.cidade}` : null;
+
+  const gameData = {
+    campeonato: [enriched.campeonato ?? game.liga?.nome ?? ''],
+    team_home: [enriched.team_home ?? game.clube_mandante.nome],
+    img_src_home: [enriched.img_src_home ?? game.clube_mandante.escudo_url],
+    team_away: [enriched.team_away ?? game.clube_visitante.nome],
+    img_src_away: [enriched.img_src_away ?? game.clube_visitante.escudo_url],
+    datas: [enriched.datas ?? isoDateToParts(game.data_hora)],
+    local: [enriched.local ?? localStr],
+    broadcast: [enriched.broadcast ?? null],
+  };
+  container.appendChild(buildGameCard(gameData, 0));
+
+  const plans = document.createElement('div');
+  plans.className = 'ticket-plans';
+
+  const visiblePlans = game.liberacoes.filter((l) => l.publica);
+
+  const groups = new Map();
+  visiblePlans.forEach((lib) => {
+    const key = lib.data_de_liberacao.slice(0, 16);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(lib);
+  });
+
+  groups.forEach((libs, key) => {
+    const groupEl = document.createElement('div');
+    groupEl.className = 'ticket-group';
+
+    const groupHeader = document.createElement('div');
+    groupHeader.className = 'ticket-group-header';
+    groupHeader.textContent = `Liberado ${formatIsoDate(key)}`;
+    groupEl.appendChild(groupHeader);
+
+    libs.forEach((lib) => {
+      const row = document.createElement('div');
+      row.className = 'ticket-plan-row';
+
+      const btn = document.createElement('a');
+      btn.className = 'btn-comprar';
+      btn.href = buyUrl;
+      btn.target = '_blank';
+      btn.rel = 'noopener noreferrer';
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 12c0-1.1.9-2 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v4c1.1 0 2 .9 2 2s-.9 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2z"/></svg>Comprar`;
+
+      const name = document.createElement('span');
+      name.className = 'ticket-plan-name';
+      name.textContent = lib.localizador.titulo;
+
+      row.append(btn, name);
+      groupEl.appendChild(row);
+    });
+
+    plans.appendChild(groupEl);
+  });
+
+  container.appendChild(plans);
+}
+
+function isoDateToParts(iso) {
+  const d = new Date(iso);
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const hh = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  return [`${dd}/${mm}`, `${hh}:${min}`];
+}
+
+function formatIsoDate(iso) {
+  const [datePart, timePart] = isoDateToParts(iso);
+  return `${datePart} às ${timePart}`;
+}
+
 export function renderGames(data) {
   const gamesList = document.getElementById('games-list');
   gamesList.innerHTML = '';
@@ -88,6 +168,80 @@ function formatDate(parts) {
   const time = parts[parts.length - 1];
   if (parts.length === 2) return `${capitalize(parts[0])} às ${time}`;
   return `${capitalize(parts[0])} ${parts[1]} às ${time}`;
+}
+
+export function renderLiveGames(data, container) {
+  if (data.team_home.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+
+  const existing = container.querySelectorAll('a.game--live');
+  if (existing.length === data.team_home.length) {
+    let allMatch = true;
+    existing.forEach((card, i) => { if (card.dataset.gameKey !== data.links[i]) allMatch = false; });
+    if (allMatch) {
+      existing.forEach((card, i) => {
+        card.querySelector('.live-score').textContent = `${data.score_home[i]} - ${data.score_away[i]}`;
+        card.querySelector('.live-minute').textContent = data.minute[i];
+      });
+      container.style.display = 'block';
+      return;
+    }
+  }
+
+  container.innerHTML = '';
+  const header = document.createElement('div');
+  header.className = 'live-section-header';
+  header.innerHTML = '<span class="live-dot"></span> AO VIVO';
+  container.appendChild(header);
+
+  for (let i = 0; i < data.team_home.length; i++) {
+    container.appendChild(buildLiveGameCard(data, i));
+  }
+  container.style.display = 'block';
+}
+
+function buildLiveGameCard(data, i) {
+  const href = data.links[i]
+    ? (data.links[i].startsWith('http') ? data.links[i] : `https://www.placardefutebol.com.br${data.links[i]}`)
+    : '#';
+
+  const card = document.createElement('a');
+  card.className = 'game game--live';
+  card.href = href;
+  card.target = '_blank';
+  card.rel = 'noopener noreferrer';
+  card.dataset.gameKey = data.links[i];
+
+  const cardHeader = document.createElement('div');
+  cardHeader.className = 'finished-header';
+
+  const league = document.createElement('span');
+  league.className = 'game-league';
+  league.textContent = data.campeonato[i];
+
+  const minute = document.createElement('span');
+  minute.className = 'live-minute';
+  minute.textContent = data.minute[i];
+
+  cardHeader.append(league, minute);
+
+  const teams = document.createElement('div');
+  teams.className = 'game-teams';
+
+  const score = document.createElement('span');
+  score.className = 'score-text live-score';
+  score.textContent = `${data.score_home[i]} - ${data.score_away[i]}`;
+
+  teams.append(
+    buildTeamEl(data.team_home[i], data.img_src_home[i], 'home'),
+    score,
+    buildTeamEl(data.team_away[i], data.img_src_away[i], 'away'),
+  );
+
+  card.append(cardHeader, teams);
+  return card;
 }
 
 export function renderFinishedGames(data, container) {

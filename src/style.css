@@ -1,9 +1,9 @@
 :root {
     --bg-body: #f0f0f0;
     --bg-card: #ffffff;
-    --bg-tab-inactive: #c8c8c8;
-    --bg-tab-hover: #b5b5b5;
-    --bg-tabs-bar: #c8c8c8;
+    --bg-tab-inactive: #e2e2e2;
+    --bg-tab-hover: #d0d0d0;
+    --bg-tabs-bar: #bbbbbb;
     --tab-text-inactive: #555;
     --text-primary: #444;
     --text-secondary: #666;
@@ -34,6 +34,7 @@ body {
     font-family: "Roboto Condensed", Arial, sans-serif;
     padding: 8px 4px;
     min-width: 250px;
+    max-width: 280px;
     background: var(--bg-body);
     transition: background 0.2s;
 }
@@ -49,7 +50,9 @@ body {
 }
 
 .tab {
-    padding: 8px 20px;
+    flex: 1;
+    text-align: center;
+    padding: 8px 4px;
     background-color: var(--bg-tab-inactive);
     color: var(--tab-text-inactive);
     border-radius: 6px 6px 0 0;
@@ -94,17 +97,25 @@ body {
     margin-bottom: 8px;
 }
 
-/* Dark mode toggle */
+/* Toggles container */
+.toggles-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
 .theme-toggle {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 11px;
     color: var(--toggle-text);
     user-select: none;
     text-decoration: none;
-    margin-left: 12px;
     flex-shrink: 0;
 }
 
@@ -113,10 +124,10 @@ body {
 }
 
 .toggle-track {
-    width: 24px;
-    height: 14px;
+    width: 18px;
+    height: 9px;
     background: var(--toggle-bg);
-    border-radius: 7px;
+    border-radius: 4.5px;
     position: relative;
     transition: background 0.2s;
     display: inline-block;
@@ -124,18 +135,30 @@ body {
 }
 
 .toggle-thumb {
-    width: 8px;
-    height: 8px;
+    width: 5px;
+    height: 5px;
     background: var(--toggle-thumb);
     border-radius: 50%;
     position: absolute;
-    top: 3px;
-    left: 3px;
+    top: 2px;
+    left: 2px;
     transition: left 0.2s;
 }
 
 .theme-toggle input:checked + .toggle-track .toggle-thumb {
-    left: 13px;
+    left: 11px;
+}
+
+body:not(.dark) #countdown-toggle:checked + .toggle-track {
+    background: #b80000;
+}
+
+body.dark #countdown-toggle:not(:checked) + .toggle-track {
+    background: #555;
+}
+
+.toggle-label-text {
+    color: var(--toggle-text);
 }
 
 /* Game match cards */
@@ -516,4 +539,179 @@ svg.video-icon {
     margin-top: 6px;
     padding-right: 2px;
     user-select: none;
+}
+
+/* Next game countdown */
+.next-game-countdown {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 4px 0 8px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.3px;
+}
+
+/* Live games */
+#live-games-list {
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--shadow);
+}
+
+.live-section-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #b80000;
+    padding: 2px 0 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+body.dark .live-section-header {
+    color: #ff4444;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #b80000;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: live-pulse 1.2s ease-in-out infinite;
+}
+
+body.dark .live-dot {
+    background: #ff4444;
+}
+
+@keyframes live-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.75); }
+}
+
+a.game--live {
+    display: block;
+    text-decoration: none;
+    border-left: 3px solid #b80000;
+}
+
+body.dark a.game--live {
+    border-left-color: #ff4444;
+}
+
+.live-minute {
+    font-size: 11px;
+    font-weight: bold;
+    color: #b80000;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+body.dark .live-minute {
+    color: #ff4444;
+}
+
+.live-score {
+    font-size: 17px;
+}
+
+body:not(.dark) a.game--live:hover .live-minute,
+body.dark a.game--live:hover .live-minute {
+    color: #ffee03;
+}
+
+/* Goal toast */
+.goal-toast {
+    position: fixed;
+    top: -56px;
+    left: 0;
+    right: 0;
+    background: #b80000;
+    color: #ffee03;
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    padding: 10px 12px;
+    z-index: 1000;
+    transition: top 0.3s ease-in-out;
+    border-radius: 0 0 6px 6px;
+    pointer-events: none;
+}
+
+.goal-toast.show {
+    top: 0;
+}
+
+/* Tickets tab */
+.ticket-plans {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ticket-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ticket-group-header {
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 2px 0;
+}
+
+.ticket-plan-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--bg-card);
+    border-radius: 8px;
+    padding: 8px 10px;
+    box-shadow: 0 2px 5px var(--shadow);
+}
+
+.ticket-plan-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex: 1;
+}
+
+.btn-comprar {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    padding: 5px 8px;
+    background-color: #b80000;
+    color: #ffee03;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.15s;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.btn-comprar:hover {
+    background-color: #8a0000;
+}
+
+.btn-comprar svg {
+    width: 13px;
+    height: 13px;
+    fill: #ffee03;
+    flex-shrink: 0;
 }

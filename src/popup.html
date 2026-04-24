@@ -14,6 +14,7 @@
 <body>
   <div class="tabs">
     <div class="tab active" id="tab-games">Jogos</div>
+    <div class="tab" id="tab-tickets" style="display:none;">Ingressos</div>
     <div class="tab" id="tab-news">Notícias</div>
     <div class="tab" id="tab-videos">Vídeos</div>
   </div>
@@ -26,15 +27,25 @@
         </svg>
         <span class="game-card-finished-text">Jogos Encerrados</span>
       </button>
-      <label class="theme-toggle" title="Alternar modo escuro">
-        <input type="checkbox" id="dark-mode-toggle">
-        <span class="toggle-track"><span class="toggle-thumb"></span></span>
-        <span id="toggle-label">Modo escuro</span>
-      </label>
+      <div class="toggles-container">
+        <label class="theme-toggle" title="Alternar modo escuro">
+          <input type="checkbox" id="dark-mode-toggle">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          <span class="toggle-label-text">Modo Escuro</span>
+        </label>
+        <label class="theme-toggle" title="Mostrar contagem regressiva para o próximo jogo">
+          <input type="checkbox" id="countdown-toggle">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          <span class="toggle-label-text">Contagem Regressiva</span>
+        </label>
+      </div>
     </div>
+    <div id="next-game-countdown" class="next-game-countdown" style="display:none;"></div>
+    <div id="live-games-list" style="display:none;"></div>
     <div id="finished-games-list" style="display:none;"></div>
     <div id="games-list"></div>
   </div>
+  <div id="goal-toast" class="goal-toast"></div>
 
   <div class="content" id="content-news">
     <div id="news-list">
@@ -85,6 +96,10 @@
         <span class="video-title">@sportrecife</span>
       </a>
     </div>
+  </div>
+
+  <div class="content" id="content-tickets">
+    <div id="tickets-list"></div>
   </div>
 
 <a id="footnote-socios" href="https://maiordonordeste.com.br/" target="_blank" rel="noopener noreferrer" class="socios-footnote" title="Dados do programa de sócios do Sport Club do Recife — clique para saber mais">
