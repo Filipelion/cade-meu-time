@@ -11,6 +11,7 @@ import { trackEvent } from './analytics.js';
 document.addEventListener('DOMContentLoaded', init);
 
 const prevScores = {};
+let currentLiveLink = null;
 
 async function init() {
   initTabs(trackEvent);
@@ -134,6 +135,7 @@ function isGamePossiblyLive(parts) {
 
 async function pollLiveGames() {
   const container = document.getElementById('live-games-list');
+  const finishedPanel = document.getElementById('finished-games-list');
   try {
     const liveGame = await fetchLiveGameFromLastGames();
     if (!liveGame) {
@@ -141,6 +143,7 @@ async function pollLiveGames() {
       return;
     }
 
+    currentLiveLink = liveGame.link;
     const key = liveGame.link;
     const score = `${liveGame.score_home}-${liveGame.score_away}`;
     if (prevScores[key] !== undefined && prevScores[key] !== score) {
@@ -159,6 +162,8 @@ async function pollLiveGames() {
       minute: [liveGame.minute],
       links: [liveGame.link],
     }, container);
+
+    if (finishedPanel.style.display !== 'none') container.style.display = 'none';
   } catch (err) {
     console.error('Erro ao buscar jogos ao vivo:', err);
   }
@@ -291,7 +296,7 @@ async function loadFinishedGames(panel) {
   try {
     const data = await fetchFinishedGames();
     setCachedFinishedGames(data);
-    renderFinishedGames(data, panel);
+    renderFinishedGames(data, panel, currentLiveLink);
   } catch (err) {
     console.error('Erro ao buscar jogos encerrados:', err);
     panel.innerHTML = '<div class="loading-text">Erro ao carregar jogos encerrados.</div>';

@@ -182,7 +182,9 @@ export function renderLiveGames(data, container) {
     existing.forEach((card, i) => { if (card.dataset.gameKey !== data.links[i]) allMatch = false; });
     if (allMatch) {
       existing.forEach((card, i) => {
-        card.querySelector('.live-score').textContent = `${data.score_home[i]} - ${data.score_away[i]}`;
+        const newScore = `${data.score_home[i]} - ${data.score_away[i]}`;
+        const scoreEl = card.querySelector('.live-score-text');
+        if (scoreEl) scoreEl.textContent = newScore;
         card.querySelector('.live-minute').textContent = data.minute[i];
       });
       container.style.display = 'block';
@@ -224,13 +226,18 @@ function buildLiveGameCard(data, i) {
   const teams = document.createElement('div');
   teams.className = 'game-teams';
 
-  const score = document.createElement('span');
-  score.className = 'score-text live-score';
-  score.textContent = `${data.score_home[i]} - ${data.score_away[i]}`;
+  const scoreWrap = document.createElement('span');
+  scoreWrap.className = 'score-text live-score';
+
+  const scoreText = document.createElement('span');
+  scoreText.className = 'live-score-text';
+  scoreText.textContent = `${data.score_home[i]} - ${data.score_away[i]}`;
+
+  scoreWrap.appendChild(scoreText);
 
   teams.append(
     buildTeamEl(data.team_home[i], data.img_src_home[i], 'home'),
-    score,
+    scoreWrap,
     buildTeamEl(data.team_away[i], data.img_src_away[i], 'away'),
   );
 
@@ -247,9 +254,14 @@ function buildLiveGameCard(data, i) {
   return card;
 }
 
-export function renderFinishedGames(data, container) {
+export function renderFinishedGames(data, container, excludeLink = null) {
+  const now = new Date();
+  const todayPattern = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`;
+
   container.innerHTML = '';
   for (let i = 0; i < data.team_home.length; i++) {
+    if (excludeLink && data.links[i] === excludeLink) continue;
+    if (data.links[i]?.includes(todayPattern)) continue;
     container.appendChild(buildFinishedGameCard(data, i));
   }
 }
