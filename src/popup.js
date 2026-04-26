@@ -1,6 +1,6 @@
 import { isCacheValid, getCachedGames, setCachedGames, isFinishedCacheValid, getCachedFinishedGames, setCachedFinishedGames, isSociosCacheValid, getCachedSocios, setCachedSocios, isTicketsCacheValid, getCachedTickets, setCachedTickets } from './services/cache.js';
 import { fetchGames, fetchFinishedGames } from './services/gamesApi.js';
-import { fetchLiveGames } from './services/liveGamesApi.js';
+import { fetchLiveGameFromLastGames } from './services/liveGamesApi.js';
 import { fetchSocios } from './services/sociosApi.js';
 import { fetchTickets } from './services/ticketsApi.js';
 import { renderGames, renderFinishedGames, renderLiveGames, renderTickets } from './ui/renderer.js';
@@ -21,7 +21,7 @@ async function init() {
   const gamesData = await loadGames();
   initCountdown(gamesData);
   pollLiveGames();
-  setInterval(pollLiveGames, 60_000);
+  setInterval(pollLiveGames, 30_000);
   initFinishedGamesToggle();
   loadSocios();
   loadTickets(gamesData);
@@ -134,54 +134,31 @@ function isGamePossiblyLive(parts) {
 
 async function pollLiveGames() {
   const container = document.getElementById('live-games-list');
-  const cached = getCachedGames();
-  if (!cached?.links?.length) {
-    container.style.display = 'none';
-    return;
-  }
-
-  const candidateIndices = cached.links
-    .map((_, i) => i)
-    .filter((i) => isGamePossiblyLive(cached.datas[i]));
-
-  if (candidateIndices.length === 0) {
-    renderLiveGames({ team_home: [], team_away: [], campeonato: [], img_src_home: [], img_src_away: [], score_home: [], score_away: [], minute: [], links: [] }, container);
-    return;
-  }
-
   try {
-    const reloads = await fetchLiveGames(candidateIndices.map((i) => cached.links[i]));
-
-    const liveData = {
-      campeonato: [], team_home: [], team_away: [],
-      img_src_home: [], img_src_away: [],
-      score_home: [], score_away: [], minute: [], links: [],
-    };
-
-    reloads.forEach((r, idx) => {
-      const i = candidateIndices[idx];
-      if (!r?.isLive) return;
-      liveData.campeonato.push(cached.campeonato[i]);
-      liveData.team_home.push(cached.team_home[i]);
-      liveData.team_away.push(cached.team_away[i]);
-      liveData.img_src_home.push(cached.img_src_home[i]);
-      liveData.img_src_away.push(cached.img_src_away[i]);
-      liveData.score_home.push(r.score_home);
-      liveData.score_away.push(r.score_away);
-      liveData.minute.push(r.minute);
-      liveData.links.push(cached.links[i]);
-    });
-
-    for (let i = 0; i < liveData.links.length; i++) {
-      const key = liveData.links[i];
-      const score = `${liveData.score_home[i]}-${liveData.score_away[i]}`;
-      if (prevScores[key] !== undefined && prevScores[key] !== score) {
-        showGoalToast(liveData.team_home[i], liveData.score_home[i], liveData.team_away[i], liveData.score_away[i]);
-      }
-      prevScores[key] = score;
+    const liveGame = await fetchLiveGameFromLastGames();
+    if (!liveGame) {
+      renderLiveGames({ team_home: [], team_away: [], campeonato: [], img_src_home: [], img_src_away: [], score_home: [], score_away: [], minute: [], links: [] }, container);
+      return;
     }
 
-    renderLiveGames(liveData, container);
+    const key = liveGame.link;
+    const score = `${liveGame.score_home}-${liveGame.score_away}`;
+    if (prevScores[key] !== undefined && prevScores[key] !== score) {
+      showGoalToast(liveGame.team_home, liveGame.score_home, liveGame.team_away, liveGame.score_away);
+    }
+    prevScores[key] = score;
+
+    renderLiveGames({
+      campeonato: [liveGame.campeonato],
+      team_home: [liveGame.team_home],
+      team_away: [liveGame.team_away],
+      img_src_home: [liveGame.img_src_home],
+      img_src_away: [liveGame.img_src_away],
+      score_home: [liveGame.score_home],
+      score_away: [liveGame.score_away],
+      minute: [liveGame.minute],
+      links: [liveGame.link],
+    }, container);
   } catch (err) {
     console.error('Erro ao buscar jogos ao vivo:', err);
   }
@@ -199,12 +176,14 @@ function initFinishedGamesToggle() {
   const btn = document.getElementById('btn-finished-games');
   const panel = document.getElementById('finished-games-list');
   const gamesList = document.getElementById('games-list');
+  const liveList = document.getElementById('live-games-list');
 
   btn.addEventListener('click', async () => {
     const isVisible = panel.style.display !== 'none';
 
     panel.style.display = isVisible ? 'none' : 'block';
     gamesList.style.display = isVisible ? 'block' : 'none';
+    liveList.style.display = isVisible ? (liveList.children.length > 0 ? 'block' : 'none') : 'none';
     btn.classList.toggle('active', !isVisible);
 
     trackEvent('finished_games_toggle', { action: isVisible ? 'hide' : 'show' });
@@ -250,27 +229,23 @@ async function loadTickets(gamesData) {
     console.error('Erro ao buscar ingressos:', err);
   }
 
-  if (isNextGameHome(gamesData)) {
+  const nextIdx = findNextGameIndex(gamesData);
+  if (isNextGameHome(gamesData, nextIdx)) {
     const enriched = gamesData ? {
-      campeonato: gamesData.campeonato[0],
-      team_home: gamesData.team_home[0],
-      team_away: gamesData.team_away[0],
-      img_src_home: gamesData.img_src_home[0],
-      img_src_away: gamesData.img_src_away[0],
-      datas: gamesData.datas[0],
-      local: gamesData.local?.[0] ?? null,
-      broadcast: gamesData.broadcast?.[0] ?? null,
+      campeonato: gamesData.campeonato[nextIdx],
+      team_home: gamesData.team_home[nextIdx],
+      team_away: gamesData.team_away[nextIdx],
+      img_src_home: gamesData.img_src_home[nextIdx],
+      img_src_away: gamesData.img_src_away[nextIdx],
+      datas: gamesData.datas[nextIdx],
+      local: gamesData.local?.[nextIdx] ?? null,
+      broadcast: gamesData.broadcast?.[nextIdx] ?? null,
     } : {};
     renderTickets(data, container, enriched);
     return;
   }
 
-  const nextHomeDate = data?.[0]?.data_hora
-    ? (() => {
-        const d = new Date(data[0].data_hora);
-        return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
-      })()
-    : null;
+  const nextHomeDate = findNextHomeGameDate(gamesData, nextIdx + 1);
   container.innerHTML = `<div class="loading-text">${
     nextHomeDate
       ? `Próximo jogo é fora de casa, dia ${nextHomeDate} tem jogo na Ilha novamente!`
@@ -278,8 +253,26 @@ async function loadTickets(gamesData) {
   }</div>`;
 }
 
-function isNextGameHome(gamesData) {
-  const venue = gamesData?.local?.[0];
+function findNextHomeGameDate(gamesData, startIdx) {
+  if (!gamesData?.datas?.length) return null;
+  for (let i = startIdx; i < gamesData.datas.length; i++) {
+    const venue = gamesData.local?.[i];
+    if (venue && (venue.includes('Ilha do Retiro') || venue.includes('Recife'))) {
+      const parts = gamesData.datas[i];
+      return parts?.find((p) => /\d{2}\/\d{2}/.test(p)) ?? null;
+    }
+  }
+  return null;
+}
+
+function findNextGameIndex(gamesData) {
+  if (!gamesData?.datas?.length) return 0;
+  const idx = gamesData.datas.findIndex((parts) => !isGamePossiblyLive(parts));
+  return idx >= 0 ? idx : 0;
+}
+
+function isNextGameHome(gamesData, idx) {
+  const venue = gamesData?.local?.[idx];
   if (!venue) return false;
   return venue.includes('Ilha do Retiro') || venue.includes('Recife');
 }

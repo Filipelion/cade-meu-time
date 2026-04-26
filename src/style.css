@@ -595,7 +595,7 @@ body.dark .live-dot {
 a.game--live {
     display: block;
     text-decoration: none;
-    border-left: 3px solid #b80000;
+    border-left: 3px solid #ffee03;
 }
 
 body.dark a.game--live {
@@ -618,8 +618,22 @@ body.dark .live-minute {
     font-size: 17px;
 }
 
-body:not(.dark) a.game--live:hover .live-minute,
-body.dark a.game--live:hover .live-minute {
+a.game--live:hover .live-minute {
+    color: #ffee03;
+}
+
+body.dark a.game--live:hover {
+    border-left-color: #ffee03;
+}
+
+.live-details-hint {
+    font-size: 10px;
+    color: var(--text-secondary, #888);
+    margin-top: 2px;
+    text-align: right;
+}
+
+a.game--live:hover .live-details-hint {
     color: #ffee03;
 }
 

@@ -214,18 +214,12 @@ function buildLiveGameCard(data, i) {
   card.rel = 'noopener noreferrer';
   card.dataset.gameKey = data.links[i];
 
-  const cardHeader = document.createElement('div');
-  cardHeader.className = 'finished-header';
+  const info = document.createElement('div');
+  info.className = 'game-info';
 
   const league = document.createElement('span');
   league.className = 'game-league';
   league.textContent = data.campeonato[i];
-
-  const minute = document.createElement('span');
-  minute.className = 'live-minute';
-  minute.textContent = data.minute[i];
-
-  cardHeader.append(league, minute);
 
   const teams = document.createElement('div');
   teams.className = 'game-teams';
@@ -240,7 +234,16 @@ function buildLiveGameCard(data, i) {
     buildTeamEl(data.team_away[i], data.img_src_away[i], 'away'),
   );
 
-  card.append(cardHeader, teams);
+  const minute = document.createElement('span');
+  minute.className = 'game-date live-minute';
+  minute.textContent = data.minute[i];
+
+  const hint = document.createElement('span');
+  hint.className = 'live-details-hint';
+  hint.textContent = 'Clique para ver os detalhes da partida';
+
+  info.append(league, teams, minute, hint);
+  card.appendChild(info);
   return card;
 }
 
