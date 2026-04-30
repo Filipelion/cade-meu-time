@@ -176,6 +176,8 @@ export function renderLiveGames(data, container) {
     return;
   }
 
+  const isHalftime = data.minute.some(m => m === 'Intervalo');
+
   const existing = container.querySelectorAll('a.game--live');
   if (existing.length === data.team_home.length) {
     let allMatch = true;
@@ -187,6 +189,10 @@ export function renderLiveGames(data, container) {
         if (scoreEl) scoreEl.textContent = newScore;
         card.querySelector('.live-minute').textContent = data.minute[i];
       });
+      const headerEl = container.querySelector('.live-section-header');
+      if (headerEl) headerEl.innerHTML = isHalftime
+        ? '<span class="live-dot"></span> INTERVALO'
+        : '<span class="live-dot"></span> AO VIVO';
       container.style.display = 'block';
       return;
     }
@@ -195,7 +201,9 @@ export function renderLiveGames(data, container) {
   container.innerHTML = '';
   const header = document.createElement('div');
   header.className = 'live-section-header';
-  header.innerHTML = '<span class="live-dot"></span> AO VIVO';
+  header.innerHTML = isHalftime
+    ? '<span class="live-dot"></span> INTERVALO'
+    : '<span class="live-dot"></span> AO VIVO';
   container.appendChild(header);
 
   for (let i = 0; i < data.team_home.length; i++) {
