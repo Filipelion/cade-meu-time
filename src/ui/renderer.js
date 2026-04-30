@@ -263,13 +263,9 @@ function buildLiveGameCard(data, i) {
 }
 
 export function renderFinishedGames(data, container, excludeLink = null) {
-  const now = new Date();
-  const todayPattern = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`;
-
   container.innerHTML = '';
   for (let i = 0; i < data.team_home.length; i++) {
     if (excludeLink && data.links[i] === excludeLink) continue;
-    if (data.links[i]?.includes(todayPattern)) continue;
     container.appendChild(buildFinishedGameCard(data, i));
   }
 }

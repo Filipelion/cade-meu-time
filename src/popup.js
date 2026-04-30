@@ -1,4 +1,4 @@
-import { isCacheValid, getCachedGames, setCachedGames, isFinishedCacheValid, getCachedFinishedGames, setCachedFinishedGames, isSociosCacheValid, getCachedSocios, setCachedSocios, isTicketsCacheValid, getCachedTickets, setCachedTickets } from './services/cache.js';
+import { isCacheValid, getCachedGames, setCachedGames, isFinishedCacheValid, getCachedFinishedGames, setCachedFinishedGames, clearFinishedCache, isSociosCacheValid, getCachedSocios, setCachedSocios, isTicketsCacheValid, getCachedTickets, setCachedTickets } from './services/cache.js';
 import { fetchGames, fetchFinishedGames } from './services/gamesApi.js';
 import { fetchLiveGameFromLastGames } from './services/liveGamesApi.js';
 import { fetchSocios } from './services/sociosApi.js';
@@ -139,6 +139,11 @@ async function pollLiveGames() {
   try {
     const liveGame = await fetchLiveGameFromLastGames();
     if (!liveGame) {
+      if (currentLiveLink) {
+        currentLiveLink = null;
+        clearFinishedCache();
+        if (finishedPanel.style.display !== 'none') await loadFinishedGames(finishedPanel);
+      }
       renderLiveGames({ team_home: [], team_away: [], campeonato: [], img_src_home: [], img_src_away: [], score_home: [], score_away: [], minute: [], links: [] }, container);
       return;
     }

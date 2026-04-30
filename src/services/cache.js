@@ -41,6 +41,10 @@ export function setCachedFinishedGames(data) {
   localStorage.setItem(FINISHED_CACHE_TS_KEY, Date.now().toString());
 }
 
+export function clearFinishedCache() {
+  localStorage.removeItem(FINISHED_CACHE_TS_KEY);
+}
+
 const TICKETS_CACHE_KEY = 'ticketsData';
 const TICKETS_CACHE_TS_KEY = 'lastFetchedTickets';
 const TICKETS_CACHE_TTL_MS = 30 * 60 * 1000;
