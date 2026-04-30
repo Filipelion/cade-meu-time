@@ -103,10 +103,12 @@ export function parseFinishedGamesFromHTML(html) {
   };
 
   for (const card of cards) {
-    const dateText = card.querySelector('.match__lg_card--datetime')?.textContent.trim()
-      || card.querySelector('.match__lg_card--status')?.textContent.trim()
-      || '';
-    result.datas.push(dateText);
+    const dateEl = card.querySelector('.match__lg_card--date')?.textContent.trim() ?? '';
+    const dateFromLink = (() => {
+      const m = (card.getAttribute('href') ?? '').match(/(\d{2})-(\d{2})-(\d{4})/);
+      return m ? `${m[1]}/${m[2]}` : '';
+    })();
+    result.datas.push(dateEl || dateFromLink);
     result.campeonato.push(card.querySelector('.match__lg_card--league')?.textContent.trim() ?? '');
     result.team_home.push(card.querySelector('.match__lg_card--ht-name.text')?.textContent.trim() ?? '');
     result.team_away.push(card.querySelector('.match__lg_card--at-name.text')?.textContent.trim() ?? '');

@@ -653,6 +653,7 @@ a.game--live:hover .live-details-hint {
     transition: top 0.3s ease-in-out;
     border-radius: 0 0 6px 6px;
     pointer-events: none;
+    white-space: pre-line;
 }
 
 .goal-toast.show {

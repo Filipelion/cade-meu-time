@@ -176,10 +176,10 @@ async function pollLiveGames() {
 
 function showGoalToast(home, scoreHome, away, scoreAway) {
   const toast = document.getElementById('goal-toast');
-  toast.textContent = `⚽ GOL! ${home} ${scoreHome} × ${scoreAway} ${away}`;
+  toast.textContent = `⚽ GOL!!\n${home} ${scoreHome} × ${scoreAway} ${away}`;
   toast.classList.add('show');
   clearTimeout(toast._hideTimer);
-  toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 5000);
+  toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 7000);
 }
 
 function initFinishedGamesToggle() {
