@@ -1,12 +1,14 @@
-const { test: base, expect, chromium } = require('@playwright/test');
-const path = require('path');
-const { mkdtempSync } = require('fs');
-const { tmpdir } = require('os');
+import { test as base, expect, chromium } from '@playwright/test';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import { mkdtempSync } from 'fs';
+import { tmpdir } from 'os';
 
-const EXTENSION_PATH = path.resolve(__dirname, '../../src');
+const EXTENSION_PATH = path.resolve(fileURLToPath(new URL('.', import.meta.url)), '../../src');
 
 const test = base.extend({
   // One persistent Chrome context per worker — shared across all tests in that worker.
+  // eslint-disable-next-line no-empty-pattern
   sharedContext: [async ({}, use) => {
     const userDataDir = mkdtempSync(path.join(tmpdir(), 'pw-ext-'));
     const context = await chromium.launchPersistentContext(userDataDir, {
@@ -52,4 +54,4 @@ const test = base.extend({
   },
 });
 
-module.exports = { test, expect };
+export { test, expect };

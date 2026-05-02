@@ -1,6 +1,5 @@
-const { test, expect } = require('./fixtures');
-const { setup } = require('./helpers/page-setup');
-const { CORS } = require('./fixtures/mock-data');
+import { test, expect } from './fixtures/index.js';
+import { setup } from './helpers/page-setup.js';
 
 test.describe('Sócios footnote', () => {
   test('displays Texto from API', async ({ page, extensionId }) => {

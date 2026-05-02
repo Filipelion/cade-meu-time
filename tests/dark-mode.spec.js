@@ -1,5 +1,5 @@
-const { test, expect } = require('./fixtures');
-const { setup, enableDark } = require('./helpers/page-setup');
+import { test, expect } from './fixtures/index.js';
+import { setup, enableDark } from './helpers/page-setup.js';
 
 test.describe('Dark mode', () => {
   test('starts in light mode', async ({ page, extensionId }) => {

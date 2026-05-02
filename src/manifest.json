@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Maior do Nordeste - Sport Club do Recife",
   "version": "1.9",
-  "description": "Próximos jogos, resultados, notícias e vídeos oficiais. A extensão definitiva para o torcedor do Leão. Pelo Sport, tudo!",
+  "description": "Acompanhe os jogos do Sport: próximos confrontos, placar ao vivo, resultados, ingressos, notícias e vídeos. Pelo Sport, tudo!",
   "host_permissions": [
     "https://www.placardefutebol.com.br/*",
     "https://maiordonordeste.com.br/*",

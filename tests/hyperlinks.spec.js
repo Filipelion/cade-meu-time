@@ -1,5 +1,5 @@
-const { test, expect } = require('./fixtures');
-const { setup } = require('./helpers/page-setup');
+import { test, expect } from './fixtures/index.js';
+import { setup } from './helpers/page-setup.js';
 
 const NEWS_LINKS = [
   ['Sport Club do Recife', 'https://sportrecife.com.br/noticias/'],

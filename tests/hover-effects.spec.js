@@ -1,6 +1,6 @@
-const { test, expect } = require('./fixtures');
-const { setup, enableDark, bgColor, textColor } = require('./helpers/page-setup');
-const { RED, YELLOW } = require('./fixtures/mock-data');
+import { test, expect } from './fixtures/index.js';
+import { setup, enableDark, bgColor, textColor } from './helpers/page-setup.js';
+import { RED, YELLOW } from './fixtures/mock-data.js';
 
 // Hover behavior is identical in light and dark mode — parameterize to avoid duplication.
 for (const [label, applyMode] of [

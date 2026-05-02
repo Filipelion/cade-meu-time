@@ -1,6 +1,6 @@
-const { test, expect } = require('./fixtures');
-const { setup, bgColor, textColor } = require('./helpers/page-setup');
-const { RED, YELLOW } = require('./fixtures/mock-data');
+import { test, expect } from './fixtures/index.js';
+import { setup, bgColor, textColor } from './helpers/page-setup.js';
+import { RED, YELLOW } from './fixtures/mock-data.js';
 
 test.describe('Jogos Encerrados', () => {
   test('panel is hidden and upcoming games are visible by default', async ({ page, extensionId }) => {

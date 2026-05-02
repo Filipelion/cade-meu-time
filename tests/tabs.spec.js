@@ -1,5 +1,5 @@
-const { test, expect } = require('./fixtures');
-const { setup } = require('./helpers/page-setup');
+import { test, expect } from './fixtures/index.js';
+import { setup } from './helpers/page-setup.js';
 
 test.describe('Tab switching', () => {
   test('Jogos tab is active by default', async ({ page, extensionId }) => {

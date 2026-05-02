@@ -1,3 +1,4 @@
+/* global chrome */
 import { isCacheValid, getCachedGames, setCachedGames, isFinishedCacheValid, getCachedFinishedGames, setCachedFinishedGames, clearFinishedCache, isSociosCacheValid, getCachedSocios, setCachedSocios, isTicketsCacheValid, getCachedTickets, setCachedTickets } from './services/cache.js';
 import { fetchGames, fetchFinishedGames } from './services/gamesApi.js';
 import { fetchLiveGameFromLastGames } from './services/liveGamesApi.js';

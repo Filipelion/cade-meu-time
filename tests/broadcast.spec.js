@@ -1,6 +1,6 @@
-const { test, expect } = require('./fixtures');
-const { setup, enableDark, textColor } = require('./helpers/page-setup');
-const { YELLOW } = require('./fixtures/mock-data');
+import { test, expect } from './fixtures/index.js';
+import { setup, enableDark, textColor } from './helpers/page-setup.js';
+import { YELLOW } from './fixtures/mock-data.js';
 
 test.describe('Broadcast label', () => {
   test('displays normalized channel names', async ({ page, extensionId }) => {

@@ -1,10 +1,10 @@
-const {
+import {
   FAKE_LISTING_HTML,
   FAKE_DETAIL_HTML,
   FAKE_FINISHED_HTML,
   FAKE_SOCIOS_JSON,
   CORS,
-} = require('../fixtures/mock-data');
+} from '../fixtures/mock-data.js';
 
 async function setup(page, extensionId) {
   // Wildcard fallback handles individual match detail pages (lower LIFO priority)
@@ -45,4 +45,4 @@ async function enableDark(page) {
 const bgColor   = (loc) => loc.evaluate((el) => getComputedStyle(el).backgroundColor);
 const textColor = (loc) => loc.evaluate((el) => getComputedStyle(el).color);
 
-module.exports = { setup, enableDark, bgColor, textColor };
+export { setup, enableDark, bgColor, textColor };

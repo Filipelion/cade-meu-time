@@ -43,7 +43,7 @@ const CORS   = { 'Access-Control-Allow-Origin': '*' };
 const RED    = 'rgb(184, 0, 0)';
 const YELLOW = 'rgb(255, 238, 3)';
 
-module.exports = {
+export {
   FAKE_LISTING_HTML,
   FAKE_DETAIL_HTML,
   FAKE_FINISHED_HTML,
