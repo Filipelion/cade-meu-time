@@ -38,8 +38,12 @@ A Extensão do Chrome "Maior do Nordeste" é uma ferramenta que permite aos fãs
 
 ## Recursos
 
-- Próximos jogos do Sport com **data, horário e competição** de cada partida.
-- Botão de acesso rápido aos **Jogos Encerrados** no Globo Esporte.
+- **Próximos jogos** com data, horário, competição, local e transmissão de cada partida. Clique no card para abrir os detalhes no placardefutebol.com.br.
+- **Placar ao vivo** — detecta automaticamente quando o Sport está em campo e exibe o placar e o minuto em tempo real.
+- **Botão YouTube ao vivo** — quando disponível, exibe acesso direto à transmissão no YouTube.
+- **Contador regressivo** para o próximo jogo (opcional, ativável por toggle).
+- **Jogos Encerrados** — histórico dos últimos resultados com placar e data.
+- **Ingressos** — quando o próximo jogo for em casa, exibe os planos disponíveis com link direto para compra.
 - **Modo escuro** com persistência de preferência.
 - **Contador de Sócios** — exibe o número atualizado de sócios do clube.
 - Acesse os principais portais de notícias sobre o Sport Club do Recife.
@@ -70,8 +74,11 @@ Após a instalação, você verá o ícone da extensão na barra de ferramentas 
 
 ### Jogos
 
-- Selecione a guia "Jogos" para ver os próximos jogos do Sport, com data, horário e local da partida.
-- Clique no botão "Jogos Encerrados" para ver o histórico no Globo Esporte.
+- Selecione a guia "Jogos" para ver os próximos jogos do Sport, com data, horário, local e canal de transmissão.
+- Clique em um card para abrir os detalhes da partida no placardefutebol.com.br.
+- Quando houver transmissão no YouTube, o botão "Assistir ao vivo" aparece abaixo da TV.
+- Se o Sport estiver em campo, o placar ao vivo é exibido automaticamente no topo.
+- Clique no botão "Jogos Encerrados" para ver os últimos resultados.
 - Use o toggle no canto superior direito para alternar entre modo claro e escuro.
 
 ### Notícias
@@ -85,32 +92,69 @@ Após a instalação, você verá o ícone da extensão na barra de ferramentas 
 ## Estrutura do Projeto
 
 ```
-src/                  ← pasta a ser carregada no Chrome
+src/                    ← pasta a ser carregada no Chrome
   manifest.json
   popup.html
-  style.css
-  icon.png
-  popup.js
+  popup.js              ← orquestra toda a inicialização
+  constants.js          ← textos, seletores e URLs centralizados
+  analytics.js          ← Google Analytics 4
+  style.css             ← importa os módulos de styles/
+  styles/
+    variables.css       ← CSS variables para temas claro/escuro
+    base.css
+    games.css
+    tabs.css
+    tickets.css
+    toggles.css
+    socios.css
+    media.css
   services/
-    cache.js          ← cache com TTL de 24h em localStorage
-    gamesApi.js       ← scraping do placardefutebol.com.br
+    cache.js            ← localStorage com TTLs por dataset
+    gamesApi.js         ← scraping do placardefutebol.com.br
+    liveGamesApi.js     ← polling de placar ao vivo
+    sociosApi.js        ← contagem de sócios
+    ticketsApi.js       ← ingressos via API maiordonordeste.com.br
   ui/
-    renderer.js       ← renderização dos cards de jogos
-    tabs.js           ← lógica de troca de abas
-    darkMode.js       ← toggle de modo escuro
-tests/                ← testes Playwright (não incluídos na extensão)
+    renderer.js         ← constrói os cards de jogos, live e ingressos
+    tabs.js             ← lógica de troca de abas
+    darkMode.js         ← toggle de modo escuro
+tests/                  ← testes Playwright E2E (não incluídos na extensão)
+  fixtures/
+    index.js            ← contexto Chrome compartilhado por worker
+    mock-data.js        ← HTML/JSON falsos para todas as rotas
+  helpers/
+    page-setup.js       ← setup(), setupWithYoutube(), enableDark()
+  broadcast.spec.js
+  dark-mode.spec.js
+  finished-games.spec.js
+  footer.spec.js
+  game-card.spec.js
+  hover-effects.spec.js
+  hyperlinks.spec.js
+  tabs.spec.js
+  youtube-button.spec.js
 ```
 
 ## Desenvolvimento e Testes
 
-O projeto usa [Playwright](https://playwright.dev/) para testes end-to-end da extensão.
+O projeto usa [Playwright](https://playwright.dev/) para testes E2E que carregam a extensão real no Chrome.
 
 ```bash
-npm install
-npx playwright test
+npm install                                       # primeira vez
+npx playwright install chromium                   # primeira vez
+npm test                                          # todos os testes
+npx playwright test --grep "Dark mode"            # um describe específico
+npx playwright test tests/youtube-button.spec.js  # um arquivo específico
 ```
 
-Os testes cobrem: alternância de modo escuro, troca de abas, efeitos de hover (modo claro e escuro) e todos os hiperlinks.
+Para recarregar a extensão após mudanças no código: `chrome://extensions/` → botão de reload → reabrir o popup.
+
+Para forçar novo fetch de dados (limpar cache):
+```js
+localStorage.clear()  // no DevTools do popup
+```
+
+Os testes cobrem: renderização dos cards de jogos, clickabilidade dos cards, botão YouTube (presença, link, UX, cores em light/dark), broadcast, modo escuro, troca de abas, efeitos de hover, jogos encerrados, footer/sócios e todos os hiperlinks.
 
 ## Contribuição
 
