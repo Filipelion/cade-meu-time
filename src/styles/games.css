@@ -1,0 +1,355 @@
+/* ── Shared card ── */
+.game {
+  background-color: var(--bg-card);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px var(--shadow);
+  transition:
+    transform 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+}
+
+.game:hover {
+  transform: scale(1.05);
+  background-color: var(--brand-red);
+}
+
+.game:hover .home-team-name,
+.game:hover .away-team-name,
+.game:hover .vs-text,
+.game:hover .score-text,
+.game:hover .game-league,
+.game:hover .game-date,
+.game:hover .game-venue,
+.game:hover .game-broadcast {
+  color: var(--brand-yellow);
+}
+
+.game:hover .venue-icon {
+  fill: var(--brand-yellow);
+}
+
+/* ── Teams ── */
+.game-teams {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.home-team-div,
+.away-team-div {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.home-team-div {
+  justify-content: flex-end;
+}
+
+.away-team-div {
+  justify-content: flex-start;
+}
+
+.home-team-name,
+.away-team-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.home-team-icon,
+.away-team-icon {
+  width: 30px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.home-team-icon {
+  margin-right: 10px;
+  order: -1;
+}
+
+.away-team-icon {
+  margin-left: 10px;
+}
+
+.vs-text {
+  margin: 0 10px;
+  color: var(--text-secondary);
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.score-text {
+  margin: 0 10px;
+  color: var(--text-primary);
+  font-weight: bold;
+  font-size: 15px;
+  flex-shrink: 0;
+  letter-spacing: 1px;
+}
+
+/* ── Game info ── */
+.game-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-league {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+.game-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.game-venue {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.venue-icon {
+  width: 11px;
+  height: 11px;
+  fill: var(--text-secondary);
+  flex-shrink: 0;
+  transition: fill 0.2s;
+}
+
+/* ── Finished games ── */
+#finished-games-list {
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--shadow);
+}
+
+a.game--finished {
+  display: block;
+  text-decoration: none;
+  border-left: 3px solid var(--brand-yellow);
+}
+
+body.dark a.game--finished {
+  border-left-color: var(--brand-red);
+}
+
+.finished-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.finished-header .game-league {
+  margin-bottom: 0;
+  font-size: 12px;
+}
+
+.finished-date {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: normal;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.game--finished:hover .finished-date,
+.game--finished:hover .score-text {
+  color: var(--brand-yellow);
+}
+
+/* ── Countdown ── */
+.next-game-countdown {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 4px 0 8px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3px;
+}
+
+body.dark .next-game-countdown {
+  color: var(--brand-yellow);
+}
+
+/* ── Live games ── */
+#live-games-list {
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--shadow);
+}
+
+.live-section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--live-red);
+  padding: 2px 0 6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--live-red);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: live-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.75);
+  }
+}
+
+a.game--live {
+  display: block;
+  text-decoration: none;
+  border-left: 3px solid var(--brand-yellow);
+}
+
+body.dark a.game--live {
+  border-left-color: var(--live-red);
+}
+
+body.dark a.game--live:hover {
+  border-left-color: var(--brand-yellow);
+}
+
+.live-minute {
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--live-red);
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.live-score {
+  font-size: 17px;
+}
+
+a.game--live:hover .live-minute,
+a.game--live:hover .live-details-hint {
+  color: var(--brand-yellow);
+}
+
+.live-details-hint {
+  font-size: 10px;
+  color: var(--text-secondary, #888);
+  margin-top: 2px;
+  text-align: right;
+}
+
+/* ── YouTube live link ── */
+.game-youtube {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brand-yellow);
+  background: #ff0000;
+  border: 1.5px solid transparent;
+  border-radius: 4px;
+  padding: 3px 8px;
+  margin-top: 6px;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.15s, box-shadow 0.15s, border-color 0.15s, color 0.15s;
+}
+
+/* bright mode: texto igual aos demais */
+body:not(.dark) .game-youtube {
+  color: var(--text-primary);
+}
+
+body:not(.dark) .game-youtube svg {
+  fill: var(--text-primary);
+}
+
+.game-youtube:hover {
+  background: #c00;
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(255, 0, 0, 0.5);
+}
+
+.game-youtube svg {
+  width: 13px;
+  height: 13px;
+  fill: var(--brand-yellow);
+  flex-shrink: 0;
+}
+
+.yt-label-hover {
+  display: none;
+}
+
+.game-youtube:hover .yt-label-default {
+  display: none;
+}
+
+.game-youtube:hover .yt-label-hover {
+  display: inline;
+}
+
+/* card hover: botão vira amarelo com texto escuro */
+.game:hover .game-youtube {
+  background: var(--brand-yellow);
+  color: #333;
+  border-color: transparent;
+}
+
+.game:hover .game-youtube svg {
+  fill: #333;
+}
+
+/* botão hover dentro do card hover: escurece o amarelo */
+.game:hover .game-youtube:hover {
+  background: #e6d400;
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(255, 238, 3, 0.5);
+}
+
+/* ── Goal toast ── */
+.goal-toast {
+  position: fixed;
+  top: -56px;
+  left: 0;
+  right: 0;
+  background: var(--brand-red);
+  color: var(--brand-yellow);
+  font-weight: bold;
+  font-size: 13px;
+  text-align: center;
+  padding: 10px 12px;
+  z-index: 1000;
+  transition: top 0.3s ease-in-out;
+  border-radius: 0 0 6px 6px;
+  pointer-events: none;
+  white-space: pre-line;
+}
+
+.goal-toast.show {
+  top: 0;
+}

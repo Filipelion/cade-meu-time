@@ -57,20 +57,30 @@ export function parseMatchDetailsFromHTML(html) {
     if (venue && broadcast) break;
   }
 
-  return { venue, broadcast };
+  const embedMatch = html.match(
+    /src="https:\/\/www\.youtube\.com\/embed\/([a-zA-Z0-9_-]+)/,
+  );
+  const hrefMatch = html.match(
+    /href="(https?:\/\/(?:www\.youtube\.com\/watch[^"]*|youtu\.be\/[^"]+))"/,
+  );
+  const youtubeUrl = embedMatch
+    ? `https://www.youtube.com/watch?v=${embedMatch[1]}`
+    : (hrefMatch?.[1] ?? "");
+
+  return { venue, broadcast, youtubeUrl };
 }
 
 async function fetchMatchDetails(relativeUrl) {
-  if (!relativeUrl) return { venue: "", broadcast: "" };
+  if (!relativeUrl) return { venue: "", broadcast: "", youtubeUrl: "" };
   try {
     const url = relativeUrl.startsWith("http")
       ? relativeUrl
       : `https://www.placardefutebol.com.br${relativeUrl}`;
     const res = await fetch(url);
-    if (!res.ok) return { venue: "", broadcast: "" };
+    if (!res.ok) return { venue: "", broadcast: "", youtubeUrl: "" };
     return parseMatchDetailsFromHTML(await res.text());
   } catch {
-    return { venue: "", broadcast: "" };
+    return { venue: "", broadcast: "", youtubeUrl: "" };
   }
 }
 
@@ -85,6 +95,7 @@ export async function fetchGames() {
     ...data,
     local: details.map((d) => d.venue),
     broadcast: details.map((d) => d.broadcast),
+    youtubeUrl: details.map((d) => d.youtubeUrl),
   };
 }
 

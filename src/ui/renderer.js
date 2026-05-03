@@ -1,9 +1,13 @@
+import { JOGOS, INGRESSOS } from "../constants.js";
+
+const YOUTUBE_ICON_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6a3 3 0 0 0-2.1 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>`;
+
 export function renderTickets(games, container, enriched = {}) {
   container.innerHTML = "";
   if (!games || games.length === 0) return;
 
   const game = games[0];
-  const buyUrl = `https://maiordonordeste.com.br/jogos/${game.id}/comprar`;
+  const buyUrl = `${INGRESSOS.URL.BUY_BASE}${game.id}/comprar`;
   const localStr = game.local
     ? `${game.local.nome}, ${game.local.cidade}`
     : null;
@@ -17,6 +21,8 @@ export function renderTickets(games, container, enriched = {}) {
     datas: [enriched.datas ?? isoDateToParts(game.data_hora)],
     local: [enriched.local ?? localStr],
     broadcast: [enriched.broadcast ?? null],
+    youtubeUrl: [enriched.youtubeUrl ?? null],
+    links: [enriched.links ?? null],
   };
   container.appendChild(buildGameCard(gameData, 0));
 
@@ -38,7 +44,7 @@ export function renderTickets(games, container, enriched = {}) {
 
     const groupHeader = document.createElement("div");
     groupHeader.className = "ticket-group-header";
-    groupHeader.textContent = `Liberado ${formatIsoDate(key)}`;
+    groupHeader.textContent = `${INGRESSOS.TEXT.RELEASE_PREFIX}${formatIsoDate(key)}`;
     groupEl.appendChild(groupHeader);
 
     libs.forEach((lib) => {
@@ -50,7 +56,7 @@ export function renderTickets(games, container, enriched = {}) {
       btn.href = buyUrl;
       btn.target = "_blank";
       btn.rel = "noopener noreferrer";
-      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 12c0-1.1.9-2 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v4c1.1 0 2 .9 2 2s-.9 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2z"/></svg>Comprar`;
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 12c0-1.1.9-2 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v4c1.1 0 2 .9 2 2s-.9 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2z"/></svg>${INGRESSOS.TEXT.BUY_BTN}`;
 
       const name = document.createElement("span");
       name.className = "ticket-plan-name";
@@ -81,7 +87,7 @@ function formatIsoDate(iso) {
 }
 
 export function renderGames(data) {
-  const gamesList = document.getElementById("games-list");
+  const gamesList = document.getElementById(JOGOS.ELEMENT.GAMES_LIST);
   gamesList.innerHTML = "";
 
   for (let i = 0; i < data.team_home.length; i++) {
@@ -92,6 +98,17 @@ export function renderGames(data) {
 function buildGameCard(data, i) {
   const card = document.createElement("div");
   card.className = "game";
+
+  const rawLink = data.links?.[i];
+  if (rawLink) {
+    const href = rawLink.startsWith("http")
+      ? rawLink
+      : `${JOGOS.URL.PLACAR_BASE}${rawLink}`;
+    card.style.cursor = "pointer";
+    card.addEventListener("click", () =>
+      window.open(href, "_blank", "noopener,noreferrer"),
+    );
+  }
 
   const info = document.createElement("div");
   info.className = "game-info";
@@ -130,6 +147,18 @@ function buildGameCard(data, i) {
     info.appendChild(broadcastEl);
   }
 
+  const youtubeUrl = data.youtubeUrl?.[i];
+  if (youtubeUrl) {
+    const ytEl = document.createElement("a");
+    ytEl.className = "game-youtube";
+    ytEl.href = youtubeUrl;
+    ytEl.target = "_blank";
+    ytEl.rel = "noopener noreferrer";
+    ytEl.innerHTML = `${YOUTUBE_ICON_SVG}<span class="yt-label-default">${JOGOS.TEXT.YOUTUBE_LIVE_LABEL}</span><span class="yt-label-hover">${JOGOS.TEXT.YOUTUBE_LIVE_LABEL_HOVER}</span>`;
+    ytEl.addEventListener("click", (e) => e.stopPropagation());
+    info.appendChild(ytEl);
+  }
+
   card.appendChild(info);
   return card;
 }
@@ -160,7 +189,7 @@ function buildTeamEl(name, imgSrc, side) {
 function buildVsEl() {
   const vs = document.createElement("span");
   vs.className = "vs-text";
-  vs.textContent = "VS";
+  vs.textContent = JOGOS.TEXT.VS;
   return vs;
 }
 
@@ -196,8 +225,8 @@ export function renderLiveGames(data, container) {
       const headerEl = container.querySelector(".live-section-header");
       if (headerEl)
         headerEl.innerHTML = isHalftime
-          ? '<span class="live-dot"></span> INTERVALO'
-          : '<span class="live-dot"></span> AO VIVO';
+          ? JOGOS.TEXT.HALFTIME_HEADER
+          : JOGOS.TEXT.LIVE_HEADER;
       container.style.display = "block";
       return;
     }
@@ -207,8 +236,8 @@ export function renderLiveGames(data, container) {
   const header = document.createElement("div");
   header.className = "live-section-header";
   header.innerHTML = isHalftime
-    ? '<span class="live-dot"></span> INTERVALO'
-    : '<span class="live-dot"></span> AO VIVO';
+    ? JOGOS.TEXT.HALFTIME_HEADER
+    : JOGOS.TEXT.LIVE_HEADER;
   container.appendChild(header);
 
   for (let i = 0; i < data.team_home.length; i++) {
@@ -221,7 +250,7 @@ function buildLiveGameCard(data, i) {
   const href = data.links[i]
     ? data.links[i].startsWith("http")
       ? data.links[i]
-      : `https://www.placardefutebol.com.br${data.links[i]}`
+      : `${JOGOS.URL.PLACAR_BASE}${data.links[i]}`
     : "#";
 
   const card = document.createElement("a");
@@ -262,9 +291,22 @@ function buildLiveGameCard(data, i) {
 
   const hint = document.createElement("span");
   hint.className = "live-details-hint";
-  hint.textContent = "Clique para ver os detalhes da partida";
+  hint.textContent = JOGOS.TEXT.LIVE_DETAILS_HINT;
 
   info.append(league, teams, minute, hint);
+
+  const liveYoutubeUrl = data.youtubeUrl?.[i];
+  if (liveYoutubeUrl) {
+    const ytEl = document.createElement("a");
+    ytEl.className = "game-youtube";
+    ytEl.href = liveYoutubeUrl;
+    ytEl.target = "_blank";
+    ytEl.rel = "noopener noreferrer";
+    ytEl.innerHTML = `${YOUTUBE_ICON_SVG}<span class="yt-label-default">${JOGOS.TEXT.YOUTUBE_LIVE_LABEL}</span><span class="yt-label-hover">${JOGOS.TEXT.YOUTUBE_LIVE_LABEL_HOVER}</span>`;
+    ytEl.addEventListener("click", (e) => e.stopPropagation());
+    info.appendChild(ytEl);
+  }
+
   card.appendChild(info);
   return card;
 }
@@ -281,7 +323,7 @@ function buildFinishedGameCard(data, i) {
   const href = data.links[i]
     ? data.links[i].startsWith("http")
       ? data.links[i]
-      : `https://www.placardefutebol.com.br${data.links[i]}`
+      : `${JOGOS.URL.PLACAR_BASE}${data.links[i]}`
     : "#";
 
   const card = document.createElement("a");
@@ -289,7 +331,7 @@ function buildFinishedGameCard(data, i) {
   card.href = href;
   card.target = "_blank";
   card.rel = "noopener noreferrer";
-  card.title = "Veja os detalhes";
+  card.title = JOGOS.TEXT.FINISHED_DETAILS_TITLE;
 
   const header = document.createElement("div");
   header.className = "finished-header";

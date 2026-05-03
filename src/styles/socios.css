@@ -1,0 +1,24 @@
+.socios-footnote {
+  display: block;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background-color: var(--brand-red);
+  border-radius: 0 0 8px 8px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.socios-footnote:hover {
+  background-color: var(--brand-red-hover);
+}
+
+.socios-footnote-content,
+.socios-cta {
+  display: block;
+  font-size: 11px;
+  color: var(--brand-yellow);
+  font-weight: bold;
+  letter-spacing: 0.3px;
+}

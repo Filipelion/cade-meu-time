@@ -1,4 +1,5 @@
 /* global chrome */
+import { JOGOS, INGRESSOS, SOCIOS, UI, ANALYTICS } from "./constants.js";
 import {
   isCacheValid,
   getCachedGames,
@@ -37,9 +38,9 @@ async function init() {
   initTabs(trackEvent);
   initDarkMode();
   initCountdownToggle();
-  document.getElementById("version-label").textContent =
+  document.getElementById(UI.ELEMENT.VERSION_LABEL).textContent =
     `v${chrome.runtime.getManifest().version}`;
-  trackEvent("page_view");
+  trackEvent(ANALYTICS.EVENT.PAGE_VIEW);
   const gamesData = await loadGames();
   initCountdown(gamesData);
   pollLiveGames();
@@ -66,7 +67,9 @@ async function loadGames() {
     renderGames(data);
     return data;
   } catch (err) {
-    console.error("Erro ao buscar jogos:", err);
+    trackEvent(ANALYTICS.EVENT.ERROR, { context: "load_games", message: err.message });
+    document.getElementById(JOGOS.ELEMENT.GAMES_LIST).innerHTML =
+      `<div class="loading-text">${JOGOS.TEXT.FETCH_ERROR}</div>`;
     return null;
   }
 }
@@ -98,12 +101,12 @@ function parseGameDate(parts) {
 }
 
 function initCountdownToggle() {
-  const toggle = document.getElementById("countdown-toggle");
-  const enabled = localStorage.getItem("showCountdown") === "true";
+  const toggle = document.getElementById(JOGOS.ELEMENT.COUNTDOWN_TOGGLE);
+  const enabled = localStorage.getItem(JOGOS.STORAGE.SHOW_COUNTDOWN) === "true";
   toggle.checked = enabled;
   toggle.addEventListener("change", () => {
-    localStorage.setItem("showCountdown", toggle.checked);
-    const el = document.getElementById("next-game-countdown");
+    localStorage.setItem(JOGOS.STORAGE.SHOW_COUNTDOWN, toggle.checked);
+    const el = document.getElementById(JOGOS.ELEMENT.COUNTDOWN);
     if (el) el.style.display = toggle.checked ? "block" : "none";
   });
 }
@@ -114,8 +117,8 @@ function initCountdown(gamesData) {
   const nextDate = gamesData.datas.map(parseGameDate).find((d) => d && d > now);
   if (!nextDate) return;
 
-  const el = document.getElementById("next-game-countdown");
-  if (localStorage.getItem("showCountdown") === "true")
+  const el = document.getElementById(JOGOS.ELEMENT.COUNTDOWN);
+  if (localStorage.getItem(JOGOS.STORAGE.SHOW_COUNTDOWN) === "true")
     el.style.display = "block";
 
   function tick() {
@@ -127,12 +130,11 @@ function initCountdown(gamesData) {
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff % 86400000) / 3600000);
     const mins = Math.floor((diff % 3600000) / 60000);
-    const pad = (n) => String(n).padStart(2, "0");
     const text =
       days > 0
-        ? `${days}d ${pad(hours)}h ${pad(mins)}m`
-        : `${pad(hours)}h ${pad(mins)}m`;
-    el.textContent = `Próximo jogo em: ${text}`;
+        ? `${days}d ${hours}h ${mins}m`
+        : `${hours}h ${mins}m`;
+    el.textContent = `${JOGOS.TEXT.COUNTDOWN_PREFIX}${text}`;
   }
 
   tick();
@@ -158,8 +160,8 @@ function isGamePossiblyLive(parts) {
 }
 
 async function pollLiveGames() {
-  const container = document.getElementById("live-games-list");
-  const finishedPanel = document.getElementById("finished-games-list");
+  const container = document.getElementById(JOGOS.ELEMENT.LIVE_LIST);
+  const finishedPanel = document.getElementById(JOGOS.ELEMENT.FINISHED_LIST);
   try {
     const liveGame = await fetchLiveGameFromLastGames();
     if (!liveGame) {
@@ -210,6 +212,7 @@ async function pollLiveGames() {
         score_away: [liveGame.score_away],
         minute: [liveGame.minute],
         links: [liveGame.link],
+        youtubeUrl: [liveGame.youtubeUrl ?? ""],
       },
       container,
     );
@@ -217,12 +220,12 @@ async function pollLiveGames() {
     if (finishedPanel.style.display !== "none")
       container.style.display = "none";
   } catch (err) {
-    console.error("Erro ao buscar jogos ao vivo:", err);
+    trackEvent(ANALYTICS.EVENT.ERROR, { context: "poll_live_games", message: err.message });
   }
 }
 
 function showGoalToast(home, scoreHome, away, scoreAway) {
-  const toast = document.getElementById("goal-toast");
+  const toast = document.getElementById(JOGOS.ELEMENT.GOAL_TOAST);
   toast.textContent = `⚽ GOL!!\n${home} ${scoreHome} × ${scoreAway} ${away}`;
   toast.classList.add("show");
   clearTimeout(toast._hideTimer);
@@ -230,10 +233,10 @@ function showGoalToast(home, scoreHome, away, scoreAway) {
 }
 
 function initFinishedGamesToggle() {
-  const btn = document.getElementById("btn-finished-games");
-  const panel = document.getElementById("finished-games-list");
-  const gamesList = document.getElementById("games-list");
-  const liveList = document.getElementById("live-games-list");
+  const btn = document.getElementById(JOGOS.ELEMENT.BTN_FINISHED);
+  const panel = document.getElementById(JOGOS.ELEMENT.FINISHED_LIST);
+  const gamesList = document.getElementById(JOGOS.ELEMENT.GAMES_LIST);
+  const liveList = document.getElementById(JOGOS.ELEMENT.LIVE_LIST);
 
   btn.addEventListener("click", async () => {
     const isVisible = panel.style.display !== "none";
@@ -247,7 +250,7 @@ function initFinishedGamesToggle() {
       : "none";
     btn.classList.toggle("active", !isVisible);
 
-    trackEvent("finished_games_toggle", {
+    trackEvent(ANALYTICS.EVENT.FINISHED_GAMES_TOGGLE, {
       action: isVisible ? "hide" : "show",
     });
 
@@ -258,7 +261,7 @@ function initFinishedGamesToggle() {
 }
 
 async function loadSocios() {
-  const el = document.getElementById("footnote-socios-content");
+  const el = document.getElementById(SOCIOS.ELEMENT.CONTENT);
   try {
     if (isSociosCacheValid()) {
       const cached = getCachedSocios();
@@ -268,17 +271,17 @@ async function loadSocios() {
       }
     }
     const data = await fetchSocios();
-    const text = data.Texto ?? data.texto ?? "maiordonordeste.com.br";
+    const text = data.Texto ?? data.texto ?? SOCIOS.TEXT.FALLBACK;
     setCachedSocios(text);
     el.textContent = text;
   } catch {
-    el.textContent = "maiordonordeste.com.br";
+    el.textContent = SOCIOS.TEXT.FALLBACK;
   }
 }
 
 async function loadTickets(gamesData) {
-  const tab = document.getElementById("tab-tickets");
-  const container = document.getElementById("tickets-list");
+  const tab = document.getElementById(INGRESSOS.ELEMENT.TAB);
+  const container = document.getElementById(INGRESSOS.ELEMENT.LIST);
   tab.style.display = "";
 
   let data = null;
@@ -289,7 +292,9 @@ async function loadTickets(gamesData) {
       setCachedTickets(data);
     }
   } catch (err) {
-    console.error("Erro ao buscar ingressos:", err);
+    trackEvent(ANALYTICS.EVENT.ERROR, { context: "load_tickets", message: err.message });
+    container.innerHTML = `<div class="loading-text">${INGRESSOS.TEXT.FETCH_ERROR}</div>`;
+    return;
   }
 
   const nextIdx = findNextGameIndex(gamesData);
@@ -304,6 +309,8 @@ async function loadTickets(gamesData) {
           datas: gamesData.datas[nextIdx],
           local: gamesData.local?.[nextIdx] ?? null,
           broadcast: gamesData.broadcast?.[nextIdx] ?? null,
+          youtubeUrl: gamesData.youtubeUrl?.[nextIdx] ?? null,
+          links: gamesData.links?.[nextIdx] ?? null,
         }
       : {};
     renderTickets(data, container, enriched);
@@ -313,8 +320,8 @@ async function loadTickets(gamesData) {
   const nextHomeDate = findNextHomeGameDate(gamesData, nextIdx + 1);
   container.innerHTML = `<div class="loading-text">${
     nextHomeDate
-      ? `Próximo jogo é fora de casa, dia ${nextHomeDate} tem jogo na Ilha novamente!`
-      : "Próximo jogo é fora de casa."
+      ? INGRESSOS.TEXT.AWAY_GAME_WITH_DATE(nextHomeDate)
+      : INGRESSOS.TEXT.AWAY_GAME
   }</div>`;
 }
 
@@ -322,10 +329,7 @@ function findNextHomeGameDate(gamesData, startIdx) {
   if (!gamesData?.datas?.length) return null;
   for (let i = startIdx; i < gamesData.datas.length; i++) {
     const venue = gamesData.local?.[i];
-    if (
-      venue &&
-      (venue.includes("Ilha do Retiro") || venue.includes("Recife"))
-    ) {
+    if (venue && JOGOS.TEXT.HOME_VENUES.some((v) => venue.includes(v))) {
       const parts = gamesData.datas[i];
       return parts?.find((p) => /\d{2}\/\d{2}/.test(p)) ?? null;
     }
@@ -342,11 +346,11 @@ function findNextGameIndex(gamesData) {
 function isNextGameHome(gamesData, idx) {
   const venue = gamesData?.local?.[idx];
   if (!venue) return false;
-  return venue.includes("Ilha do Retiro") || venue.includes("Recife");
+  return JOGOS.TEXT.HOME_VENUES.some((v) => venue.includes(v));
 }
 
 async function loadFinishedGames(panel) {
-  panel.innerHTML = '<div class="loading-text">Carregando...</div>';
+  panel.innerHTML = `<div class="loading-text">${JOGOS.TEXT.LOADING}</div>`;
 
   if (isFinishedCacheValid()) {
     const cached = getCachedFinishedGames();
@@ -361,8 +365,8 @@ async function loadFinishedGames(panel) {
     setCachedFinishedGames(data);
     renderFinishedGames(data, panel, currentLiveLink);
   } catch (err) {
-    console.error("Erro ao buscar jogos encerrados:", err);
+    trackEvent(ANALYTICS.EVENT.ERROR, { context: "load_finished_games", message: err.message });
     panel.innerHTML =
-      '<div class="loading-text">Erro ao carregar jogos encerrados.</div>';
+      `<div class="loading-text">${JOGOS.TEXT.LOADING_ERROR}</div>`;
   }
 }

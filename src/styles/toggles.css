@@ -1,0 +1,69 @@
+.games-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.toggles-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--toggle-text);
+  user-select: none;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.theme-toggle input {
+  display: none;
+}
+
+.toggle-track {
+  width: 18px;
+  height: 9px;
+  background: var(--toggle-bg);
+  border-radius: 4.5px;
+  position: relative;
+  transition: background 0.2s;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.toggle-thumb {
+  width: 5px;
+  height: 5px;
+  background: var(--toggle-thumb);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.2s;
+}
+
+.theme-toggle input:checked + .toggle-track .toggle-thumb {
+  left: 11px;
+}
+
+body:not(.dark) #countdown-toggle:checked + .toggle-track {
+  background: var(--brand-red);
+}
+
+body.dark #countdown-toggle:not(:checked) + .toggle-track {
+  background: #555;
+}
+
+.toggle-label-text {
+  color: var(--toggle-text);
+}

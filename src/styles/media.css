@@ -1,0 +1,120 @@
+#news-list,
+#videos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.news-card,
+.video-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 15px;
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px var(--shadow);
+  transition:
+    transform 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.news-card:hover,
+.video-card:hover {
+  transform: scale(1.05);
+  background-color: var(--brand-red);
+}
+
+img.news-icon,
+img.video-icon {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+svg.news-icon,
+svg.video-icon {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+  fill: var(--icon-fill);
+  flex-shrink: 0;
+  transition: fill 0.2s;
+}
+
+.news-title,
+.video-title {
+  font-size: 14px;
+  text-decoration: none;
+  color: var(--text-primary);
+  vertical-align: middle;
+  transition: color 0.2s;
+}
+
+.news-card:hover .news-title,
+.video-card:hover .video-title {
+  color: var(--brand-yellow);
+}
+
+.news-card:hover svg.news-icon,
+.video-card:hover svg.video-icon {
+  fill: var(--brand-yellow);
+}
+
+/* ── "Jogos Encerrados" button ── */
+.game-card-finished {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 6px 10px;
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px var(--shadow);
+  transition:
+    transform 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  font-family: inherit;
+}
+
+.game-card-finished:hover,
+.game-card-finished.active {
+  transform: scale(1.05);
+  background-color: var(--brand-red);
+}
+
+.game-card-finished.active {
+  transform: none;
+}
+
+.game-card-finished.active .game-card-finished-text,
+.game-card-finished.active svg,
+.game-card-finished:hover .game-card-finished-text,
+.game-card-finished:hover svg {
+  color: var(--brand-yellow);
+  fill: var(--brand-yellow);
+}
+
+.game-card-finished svg {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  fill: var(--icon-fill);
+  flex-shrink: 0;
+  transition: fill 0.2s;
+}
+
+.game-card-finished-text {
+  font-size: 11px;
+  text-decoration: none;
+  color: var(--text-primary);
+  vertical-align: middle;
+  transition: color 0.2s;
+}

@@ -1,0 +1,39 @@
+:root {
+  /* Theme */
+  --bg-body: #f0f0f0;
+  --bg-card: #ffffff;
+  --bg-tab-inactive: #e2e2e2;
+  --bg-tab-hover: #d0d0d0;
+  --bg-tabs-bar: #bbbbbb;
+  --tab-text-inactive: #555;
+  --text-primary: #444;
+  --text-secondary: #666;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --icon-fill: #555;
+  --toggle-bg: #b0b0b0;
+  --toggle-thumb: #fff;
+  --toggle-text: #777;
+
+  /* Brand */
+  --brand-red: #b80000;
+  --brand-red-hover: #8a0000;
+  --brand-yellow: #ffee03;
+  --live-red: #b80000;
+}
+
+body.dark {
+  --bg-body: #181818;
+  --bg-card: #2d2d2d;
+  --bg-tab-inactive: #2a2a2a;
+  --bg-tab-hover: #383838;
+  --bg-tabs-bar: #222;
+  --tab-text-inactive: #888;
+  --text-primary: #e0e0e0;
+  --text-secondary: #aaa;
+  --shadow: rgba(0, 0, 0, 0.4);
+  --icon-fill: #ccc;
+  --toggle-bg: #b80000;
+  --toggle-thumb: #fff;
+  --toggle-text: #aaa;
+  --live-red: #ff4444;
+}

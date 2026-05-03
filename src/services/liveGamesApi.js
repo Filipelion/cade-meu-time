@@ -1,3 +1,5 @@
+import { parseMatchDetailsFromHTML } from "./gamesApi.js";
+
 const LAST_GAMES_URL =
   "https://www.placardefutebol.com.br/time/sport/ultimos-jogos";
 
@@ -59,12 +61,26 @@ export async function fetchLiveGameFromLastGames() {
       if (!linkHasToday(meta.link)) continue;
       const reload = await fetchReloadData(meta.link);
       if (!reload?.isLive) continue;
+      let youtubeUrl = "";
+      try {
+        const url = meta.link.startsWith("http")
+          ? meta.link
+          : `https://www.placardefutebol.com.br${meta.link}`;
+        const detailRes = await fetch(url);
+        if (detailRes.ok) {
+          const details = parseMatchDetailsFromHTML(await detailRes.text());
+          youtubeUrl = details.youtubeUrl ?? "";
+        }
+      } catch {
+        // sem YouTube URL
+      }
       return {
         isLive: true,
         ...meta,
         score_home: reload.score_home,
         score_away: reload.score_away,
         minute: reload.minute,
+        youtubeUrl,
       };
     }
     return null;
