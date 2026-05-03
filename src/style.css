@@ -559,6 +559,10 @@ svg.video-icon {
   letter-spacing: 0.3px;
 }
 
+body.dark .next-game-countdown {
+  color: #ffee03;
+}
+
 /* Live games */
 #live-games-list {
   margin-bottom: 8px;
