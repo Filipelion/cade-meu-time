@@ -5,7 +5,8 @@
   "scripts": {
     "test": "playwright test",
     "lint": "eslint src/**/*.js",
-    "lint:fix": "eslint src/**/*.js --fix"
+    "lint:fix": "eslint src/**/*.js --fix",
+    "format": "prettier --write \"src/**/*.{js,css,html,json}\" \"tests/**/*.js\" \"*.js\" \"*.mjs\" \"*.json\""
   },
   "devDependencies": {
     "@eslint/css": "^1.2.0",

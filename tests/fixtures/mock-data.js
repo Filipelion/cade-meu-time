@@ -37,11 +37,13 @@ const FAKE_FINISHED_HTML = `<!DOCTYPE html><html><body>
 </a>
 </body></html>`;
 
-const FAKE_SOCIOS_JSON = JSON.stringify({ Texto: 'Somos 18446 sócios, 14979 pagantes' });
+const FAKE_SOCIOS_JSON = JSON.stringify({
+  Texto: "Somos 18446 sócios, 14979 pagantes",
+});
 
-const CORS   = { 'Access-Control-Allow-Origin': '*' };
-const RED    = 'rgb(184, 0, 0)';
-const YELLOW = 'rgb(255, 238, 3)';
+const CORS = { "Access-Control-Allow-Origin": "*" };
+const RED = "rgb(184, 0, 0)";
+const YELLOW = "rgb(255, 238, 3)";
 
 export {
   FAKE_LISTING_HTML,

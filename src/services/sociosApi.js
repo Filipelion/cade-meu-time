@@ -1,4 +1,4 @@
-const SOCIOS_URL = 'https://maiordonordeste.com.br/api/v1/numeros';
+const SOCIOS_URL = "https://maiordonordeste.com.br/api/v1/numeros";
 
 export async function fetchSocios() {
   const response = await fetch(SOCIOS_URL);

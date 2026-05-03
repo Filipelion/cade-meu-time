@@ -1,114 +1,227 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maior do Nordeste</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Link para a fonte "Roboto Condensed" no Google Fonts -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap"
+    />
+    <meta name="google" content="notranslate" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maior do Nordeste</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Link para a fonte "Roboto Condensed" no Google Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap">
-  <meta name="google" content="notranslate">
-</head>
+  <body>
+    <div class="tabs">
+      <div class="tab active" id="tab-games">Jogos</div>
+      <div class="tab" id="tab-tickets" style="display: none">Ingressos</div>
+      <div class="tab" id="tab-news">Notícias</div>
+      <div class="tab" id="tab-videos">Vídeos</div>
+    </div>
 
-<body>
-  <div class="tabs">
-    <div class="tab active" id="tab-games">Jogos</div>
-    <div class="tab" id="tab-tickets" style="display:none;">Ingressos</div>
-    <div class="tab" id="tab-news">Notícias</div>
-    <div class="tab" id="tab-videos">Vídeos</div>
-  </div>
+    <div class="content active" id="content-games">
+      <div class="games-top-bar">
+        <button
+          id="btn-finished-games"
+          class="game-card-finished"
+          title="Ver jogos encerrados"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            aria-label="Ícone de calendário"
+          >
+            <path
+              d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zm0-13H5V6h14v1z"
+            />
+          </svg>
+          <span class="game-card-finished-text">Jogos Encerrados</span>
+        </button>
+        <div class="toggles-container">
+          <label class="theme-toggle" title="Alternar modo escuro">
+            <input type="checkbox" id="dark-mode-toggle" />
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            <span class="toggle-label-text">Modo Escuro</span>
+          </label>
+          <label
+            class="theme-toggle"
+            title="Mostrar contagem regressiva para o próximo jogo"
+          >
+            <input type="checkbox" id="countdown-toggle" />
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            <span class="toggle-label-text">Contagem Regressiva</span>
+          </label>
+        </div>
+      </div>
+      <div
+        id="next-game-countdown"
+        class="next-game-countdown"
+        style="display: none"
+      ></div>
+      <div id="live-games-list" style="display: none"></div>
+      <div id="finished-games-list" style="display: none"></div>
+      <div id="games-list"></div>
+    </div>
+    <div id="goal-toast" class="goal-toast"></div>
 
-  <div class="content active" id="content-games">
-    <div class="games-top-bar">
-      <button id="btn-finished-games" class="game-card-finished" title="Ver jogos encerrados">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="Ícone de calendário">
-          <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zm0-13H5V6h14v1z"/>
-        </svg>
-        <span class="game-card-finished-text">Jogos Encerrados</span>
-      </button>
-      <div class="toggles-container">
-        <label class="theme-toggle" title="Alternar modo escuro">
-          <input type="checkbox" id="dark-mode-toggle">
-          <span class="toggle-track"><span class="toggle-thumb"></span></span>
-          <span class="toggle-label-text">Modo Escuro</span>
-        </label>
-        <label class="theme-toggle" title="Mostrar contagem regressiva para o próximo jogo">
-          <input type="checkbox" id="countdown-toggle">
-          <span class="toggle-track"><span class="toggle-thumb"></span></span>
-          <span class="toggle-label-text">Contagem Regressiva</span>
-        </label>
+    <div class="content" id="content-news">
+      <div id="news-list">
+        <a
+          href="https://sportrecife.com.br/noticias/"
+          target="_blank"
+          class="news-card"
+          title="Acessar site oficial"
+        >
+          <img
+            src="https://sportrecife.com.br/wp-content/uploads/2024/06/image14.png"
+            class="news-icon"
+          />
+          <span class="news-title">Sport Club do Recife</span>
+        </a>
+        <a
+          href="https://ge.globo.com/pe/futebol/times/sport/"
+          target="_blank"
+          class="news-card"
+          title="Acessar"
+        >
+          <img
+            src="https://s2-ge.glbimg.com/qAiq9Ny0KA4EmGK-aiRLQ8-y3-s=/0x0:2048x2048/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2020/f/1/ctmjQ9SOypbLkmmJyMuw/ge.png"
+            class="news-icon"
+          />
+          <span class="news-title">Globo Esporte</span>
+        </a>
+        <a
+          href="https://www.folhape.com.br/esportes/sport/"
+          target="_blank"
+          class="news-card"
+          title="Acessar"
+        >
+          <svg
+            class="news-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            aria-label="Jornal"
+            fill="currentColor"
+          >
+            <path
+              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 12H7v-2h5v2zm5-4H7V9h10v2zm0-4H7V5h10v2z"
+            />
+          </svg>
+          <span class="news-title">FolhaPE</span>
+        </a>
+
+        <a
+          href="https://jc.ne10.uol.com.br/esportes/sport"
+          target="_blank"
+          class="news-card"
+          title="Acessar"
+        >
+          <svg
+            class="news-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            aria-label="Jornal"
+            fill="currentColor"
+          >
+            <path
+              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 12H7v-2h5v2zm5-4H7V9h10v2zm0-4H7V5h10v2z"
+            />
+          </svg>
+          <span class="news-title">JC</span>
+        </a>
+        <a
+          href="https://meusport.com/"
+          target="_blank"
+          class="news-card"
+          title="Acessar"
+        >
+          <svg
+            class="news-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            aria-label="Website"
+          >
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+            />
+          </svg>
+          <span class="news-title">Meu Sport</span>
+        </a>
       </div>
     </div>
-    <div id="next-game-countdown" class="next-game-countdown" style="display:none;"></div>
-    <div id="live-games-list" style="display:none;"></div>
-    <div id="finished-games-list" style="display:none;"></div>
-    <div id="games-list"></div>
-  </div>
-  <div id="goal-toast" class="goal-toast"></div>
 
-  <div class="content" id="content-news">
-    <div id="news-list">
-      <a href="https://sportrecife.com.br/noticias/" target="_blank" class="news-card" title="Acessar site oficial">
-        <img src="https://sportrecife.com.br/wp-content/uploads/2024/06/image14.png" class="news-icon">
-        <span class="news-title">Sport Club do Recife</span>
-      </a>
-      <a href="https://ge.globo.com/pe/futebol/times/sport/" target="_blank" class="news-card" title="Acessar">
-        <img src="https://s2-ge.glbimg.com/qAiq9Ny0KA4EmGK-aiRLQ8-y3-s=/0x0:2048x2048/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2020/f/1/ctmjQ9SOypbLkmmJyMuw/ge.png" class="news-icon">
-        <span class="news-title">Globo Esporte</span>
-      </a>
-      <a href="https://www.folhape.com.br/esportes/sport/" target="_blank" class="news-card" title="Acessar">
-        <svg class="news-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="Jornal" fill="currentColor">
-          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 12H7v-2h5v2zm5-4H7V9h10v2zm0-4H7V5h10v2z"/>
-        </svg>
-        <span class="news-title">FolhaPE</span>
-      </a>
-
-      <a href="https://jc.ne10.uol.com.br/esportes/sport" target="_blank" class="news-card" title="Acessar">
-        <svg class="news-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="Jornal" fill="currentColor">
-          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 12H7v-2h5v2zm5-4H7V9h10v2zm0-4H7V5h10v2z"/>
-        </svg>
-        <span class="news-title">JC</span>
-      </a>
-      <a href="https://meusport.com/" target="_blank" class="news-card" title="Acessar">
-        <svg class="news-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="Website">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-        </svg>
-        <span class="news-title">Meu Sport</span>
-      </a>
+    <div class="content" id="content-videos">
+      <div id="videos-list">
+        <a
+          href="https://www.youtube.com/@tvsportrecife/videos?view=0&sort=dd&shelf_id=1"
+          target="_blank"
+          class="video-card"
+          title="Acessar"
+        >
+          <svg
+            class="video-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            aria-label="YouTube"
+          >
+            <path
+              d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"
+            />
+          </svg>
+          <span class="video-title">/TVSport</span>
+        </a>
+        <a
+          href="https://ge.globo.com/pe/futebol/times/sport/videos/"
+          target="_blank"
+          class="video-card"
+          title="Acessar"
+        >
+          <img
+            src="https://s2-ge.glbimg.com/qAiq9Ny0KA4EmGK-aiRLQ8-y3-s=/0x0:2048x2048/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2020/f/1/ctmjQ9SOypbLkmmJyMuw/ge.png"
+            class="video-icon"
+          />
+          <span class="video-title">Globo Esporte</span>
+        </a>
+        <a
+          href="https://www.instagram.com/sportrecife/"
+          target="_blank"
+          class="video-card"
+          title="Acessar"
+        >
+          <svg
+            class="video-icon"
+            style="width: 22px; height: 22px"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+          >
+            <path
+              d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.31.975.975 1.247 2.242 1.31 3.608.058 1.266.069 1.646.069 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.31 3.608-.975.975-2.242 1.247-3.608 1.31-1.266.058-1.646.069-4.85.069s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.31-.975-.975-1.247-2.242-1.31-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.31-3.608.975-.975 2.242-1.247 3.608-1.31C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.014 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038.058-1.28.072-1.689.072-4.948 0-3.259-.014-3.668-.072-4.948-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"
+            />
+          </svg>
+          <span class="video-title">@sportrecife</span>
+        </a>
+      </div>
     </div>
-  </div>
 
-  <div class="content" id="content-videos">
-    <div id="videos-list">
-      <a href="https://www.youtube.com/@tvsportrecife/videos?view=0&sort=dd&shelf_id=1" target="_blank" class="video-card" title="Acessar">
-        <svg class="video-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="YouTube">
-          <path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/>
-        </svg>
-        <span class="video-title">/TVSport</span>
-      </a>
-      <a href="https://ge.globo.com/pe/futebol/times/sport/videos/" target="_blank" class="video-card" title="Acessar">
-        <img src="https://s2-ge.glbimg.com/qAiq9Ny0KA4EmGK-aiRLQ8-y3-s=/0x0:2048x2048/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2020/f/1/ctmjQ9SOypbLkmmJyMuw/ge.png" class="video-icon">
-        <span class="video-title">Globo Esporte</span>
-      </a>
-      <a href="https://www.instagram.com/sportrecife/" target="_blank" class="video-card" title="Acessar">
-        <svg class="video-icon" style="width:22px;height:22px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.31.975.975 1.247 2.242 1.31 3.608.058 1.266.069 1.646.069 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.31 3.608-.975.975-2.242 1.247-3.608 1.31-1.266.058-1.646.069-4.85.069s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.31-.975-.975-1.247-2.242-1.31-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.31-3.608.975-.975 2.242-1.247 3.608-1.31C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.014 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038.058-1.28.072-1.689.072-4.948 0-3.259-.014-3.668-.072-4.948-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-        <span class="video-title">@sportrecife</span>
-      </a>
+    <div class="content" id="content-tickets">
+      <div id="tickets-list"></div>
     </div>
-  </div>
 
-  <div class="content" id="content-tickets">
-    <div id="tickets-list"></div>
-  </div>
-
-<a id="footnote-socios" href="https://maiordonordeste.com.br/" target="_blank" rel="noopener noreferrer" class="socios-footnote" title="Dados do programa de sócios do Sport Club do Recife — clique para saber mais">
-  <span id="footnote-socios-content" class="socios-footnote-content"></span>
-  <span class="socios-cta">Seja Sócio!</span>
-</a>
-<div id="version-label" class="version-label"></div>
-<script type="module" src="popup.js"></script>
-
-</body>
-
+    <a
+      id="footnote-socios"
+      href="https://maiordonordeste.com.br/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="socios-footnote"
+      title="Dados do programa de sócios do Sport Club do Recife — clique para saber mais"
+    >
+      <span id="footnote-socios-content" class="socios-footnote-content"></span>
+      <span class="socios-cta">Seja Sócio!</span>
+    </a>
+    <div id="version-label" class="version-label"></div>
+    <script type="module" src="popup.js"></script>
+  </body>
 </html>

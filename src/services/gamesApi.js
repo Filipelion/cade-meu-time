@@ -1,48 +1,58 @@
-const GAMES_URL = 'https://www.placardefutebol.com.br/time/sport/proximos-jogos';
-const FINISHED_GAMES_URL = 'https://www.placardefutebol.com.br/time/sport/ultimos-jogos';
+const GAMES_URL =
+  "https://www.placardefutebol.com.br/time/sport/proximos-jogos";
+const FINISHED_GAMES_URL =
+  "https://www.placardefutebol.com.br/time/sport/ultimos-jogos";
 
 const SELECTORS = {
-  datetime: '.match__lg_card--datetime',
-  league:   '.match__lg_card--league',
-  homeName: '.match__lg_card--ht-name.text',
-  awayName: '.match__lg_card--at-name.text',
-  homeLogo: '.match__lg_card--ht-logo',
-  awayLogo: '.match__lg_card--at-logo',
+  datetime: ".match__lg_card--datetime",
+  league: ".match__lg_card--league",
+  homeName: ".match__lg_card--ht-name.text",
+  awayName: ".match__lg_card--at-name.text",
+  homeLogo: ".match__lg_card--ht-logo",
+  awayLogo: ".match__lg_card--at-logo",
 };
 
 export function parseGamesFromHTML(html) {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const doc = new DOMParser().parseFromString(html, "text/html");
   const all = (selector) => Array.from(doc.querySelectorAll(selector));
 
   return {
-    datas:        all(SELECTORS.datetime).map((el) => el.textContent.trim().split(/\s+/)),
-    campeonato:   all(SELECTORS.league).map((el) => el.textContent.trim()),
-    team_home:    all(SELECTORS.homeName).map((el) => el.textContent.trim()),
-    team_away:    all(SELECTORS.awayName).map((el) => el.textContent.trim()),
-    img_src_home: all(SELECTORS.homeLogo).map((el) => el.querySelector('img')?.getAttribute('src') ?? ''),
-    img_src_away: all(SELECTORS.awayLogo).map((el) => el.querySelector('img')?.getAttribute('src') ?? ''),
-    links:        all('a.match__lg').map((el) => el.getAttribute('href') ?? ''),
+    datas: all(SELECTORS.datetime).map((el) =>
+      el.textContent.trim().split(/\s+/),
+    ),
+    campeonato: all(SELECTORS.league).map((el) => el.textContent.trim()),
+    team_home: all(SELECTORS.homeName).map((el) => el.textContent.trim()),
+    team_away: all(SELECTORS.awayName).map((el) => el.textContent.trim()),
+    img_src_home: all(SELECTORS.homeLogo).map(
+      (el) => el.querySelector("img")?.getAttribute("src") ?? "",
+    ),
+    img_src_away: all(SELECTORS.awayLogo).map(
+      (el) => el.querySelector("img")?.getAttribute("src") ?? "",
+    ),
+    links: all("a.match__lg").map((el) => el.getAttribute("href") ?? ""),
   };
 }
 
 function normalizeBroadcast(text) {
   const afterPrep = text.match(/ n[ao] (.+)$/);
   const channels = afterPrep ? afterPrep[1] : text;
-  return channels.replace(/\s*\([^)]*\)/g, '').trim();
+  return channels.replace(/\s*\([^)]*\)/g, "").trim();
 }
 
 export function parseMatchDetailsFromHTML(html) {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const doc = new DOMParser().parseFromString(html, "text/html");
 
-  let venue = '';
-  let broadcast = '';
+  let venue = "";
+  let broadcast = "";
 
-  for (const p of doc.querySelectorAll('p')) {
+  for (const p of doc.querySelectorAll("p")) {
     if (!venue && p.querySelector('img[src*="local.png"]')) {
       venue = p.textContent.trim();
     }
     if (!broadcast && p.querySelector('img[src*="tv.png"]')) {
-      broadcast = normalizeBroadcast(p.querySelector('strong')?.textContent.trim() ?? p.textContent.trim());
+      broadcast = normalizeBroadcast(
+        p.querySelector("strong")?.textContent.trim() ?? p.textContent.trim(),
+      );
     }
     if (venue && broadcast) break;
   }
@@ -51,16 +61,16 @@ export function parseMatchDetailsFromHTML(html) {
 }
 
 async function fetchMatchDetails(relativeUrl) {
-  if (!relativeUrl) return { venue: '', broadcast: '' };
+  if (!relativeUrl) return { venue: "", broadcast: "" };
   try {
-    const url = relativeUrl.startsWith('http')
+    const url = relativeUrl.startsWith("http")
       ? relativeUrl
       : `https://www.placardefutebol.com.br${relativeUrl}`;
     const res = await fetch(url);
-    if (!res.ok) return { venue: '', broadcast: '' };
+    if (!res.ok) return { venue: "", broadcast: "" };
     return parseMatchDetailsFromHTML(await res.text());
   } catch {
-    return { venue: '', broadcast: '' };
+    return { venue: "", broadcast: "" };
   }
 }
 
@@ -73,21 +83,25 @@ export async function fetchGames() {
   const details = await Promise.all(data.links.map(fetchMatchDetails));
   return {
     ...data,
-    local:     details.map((d) => d.venue),
+    local: details.map((d) => d.venue),
     broadcast: details.map((d) => d.broadcast),
   };
 }
 
 export function parseFinishedGamesFromHTML(html) {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const doc = new DOMParser().parseFromString(html, "text/html");
 
-  let allCards = Array.from(doc.querySelectorAll('a.match__lg'));
+  let allCards = Array.from(doc.querySelectorAll("a.match__lg"));
   if (allCards.length === 0) {
-    allCards = Array.from(doc.querySelectorAll('a')).filter(
-      (a) => /\/\d{2}-\d{2}-\d{4}-/.test(a.getAttribute('href') || ''),
+    allCards = Array.from(doc.querySelectorAll("a")).filter((a) =>
+      /\/\d{2}-\d{2}-\d{4}-/.test(a.getAttribute("href") || ""),
     );
   }
-  console.log('[finished] cards found:', allCards.length, allCards[0]?.className);
+  console.log(
+    "[finished] cards found:",
+    allCards.length,
+    allCards[0]?.className,
+  );
 
   const cards = allCards.slice(0, 5);
 
@@ -103,19 +117,39 @@ export function parseFinishedGamesFromHTML(html) {
   };
 
   for (const card of cards) {
-    const dateEl = card.querySelector('.match__lg_card--date')?.textContent.trim() ?? '';
+    const dateEl =
+      card.querySelector(".match__lg_card--date")?.textContent.trim() ?? "";
     const dateFromLink = (() => {
-      const m = (card.getAttribute('href') ?? '').match(/(\d{2})-(\d{2})-(\d{4})/);
-      return m ? `${m[1]}/${m[2]}` : '';
+      const m = (card.getAttribute("href") ?? "").match(
+        /(\d{2})-(\d{2})-(\d{4})/,
+      );
+      return m ? `${m[1]}/${m[2]}` : "";
     })();
     result.datas.push(dateEl || dateFromLink);
-    result.campeonato.push(card.querySelector('.match__lg_card--league')?.textContent.trim() ?? '');
-    result.team_home.push(card.querySelector('.match__lg_card--ht-name.text')?.textContent.trim() ?? '');
-    result.team_away.push(card.querySelector('.match__lg_card--at-name.text')?.textContent.trim() ?? '');
-    result.img_src_home.push(card.querySelector('.match__lg_card--ht-logo img')?.getAttribute('src') ?? '');
-    result.img_src_away.push(card.querySelector('.match__lg_card--at-logo img')?.getAttribute('src') ?? '');
-    result.scoreboard.push(card.querySelector('.match__lg_card--scoreboard')?.textContent.trim() ?? '');
-    result.links.push(card.getAttribute('href') ?? '');
+    result.campeonato.push(
+      card.querySelector(".match__lg_card--league")?.textContent.trim() ?? "",
+    );
+    result.team_home.push(
+      card.querySelector(".match__lg_card--ht-name.text")?.textContent.trim() ??
+        "",
+    );
+    result.team_away.push(
+      card.querySelector(".match__lg_card--at-name.text")?.textContent.trim() ??
+        "",
+    );
+    result.img_src_home.push(
+      card.querySelector(".match__lg_card--ht-logo img")?.getAttribute("src") ??
+        "",
+    );
+    result.img_src_away.push(
+      card.querySelector(".match__lg_card--at-logo img")?.getAttribute("src") ??
+        "",
+    );
+    result.scoreboard.push(
+      card.querySelector(".match__lg_card--scoreboard")?.textContent.trim() ??
+        "",
+    );
+    result.links.push(card.getAttribute("href") ?? "");
   }
 
   return result;
