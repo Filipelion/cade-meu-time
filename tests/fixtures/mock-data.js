@@ -41,16 +41,31 @@ const FAKE_SOCIOS_JSON = JSON.stringify({
   Texto: "Somos 18446 sócios, 14979 pagantes",
 });
 
+const FAKE_DETAIL_HTML_WITH_YOUTUBE = `<!DOCTYPE html><html><body>
+<div class="match-details">
+  <p><img src="/images/local.png" alt="Ícone de Localização">Ilha do Retiro (Recife, PE)</p>
+  <p><img src="/images/tv.png" alt="Ícone de TV"><strong>SporTV</strong></p>
+</div>
+<div id="video" class="match-video">
+  <iframe class="match-video-player" src="https://www.youtube.com/embed/abc1234TEST" frameborder="0" allowfullscreen></iframe>
+</div>
+</body></html>`;
+
 const CORS = { "Access-Control-Allow-Origin": "*" };
 const RED = "rgb(184, 0, 0)";
 const YELLOW = "rgb(255, 238, 3)";
+const TEXT_PRIMARY_LIGHT = "rgb(68, 68, 68)";
+const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=abc1234TEST";
 
 export {
   FAKE_LISTING_HTML,
   FAKE_DETAIL_HTML,
+  FAKE_DETAIL_HTML_WITH_YOUTUBE,
   FAKE_FINISHED_HTML,
   FAKE_SOCIOS_JSON,
   CORS,
   RED,
   YELLOW,
+  TEXT_PRIMARY_LIGHT,
+  YOUTUBE_WATCH_URL,
 };
