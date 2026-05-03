@@ -130,10 +130,11 @@ function initCountdown(gamesData) {
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff % 86400000) / 3600000);
     const mins = Math.floor((diff % 3600000) / 60000);
-    const text =
-      days > 0
-        ? `${days}d ${hours}h ${mins}m`
-        : `${hours}h ${mins}m`;
+    const text = days > 0
+      ? `${days}d ${hours}h ${mins}m`
+      : hours > 0
+        ? `${hours}h ${mins}m`
+        : `${mins}m`;
     el.textContent = `${JOGOS.TEXT.COUNTDOWN_PREFIX}${text}`;
   }
 

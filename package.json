@@ -1,6 +1,6 @@
 {
-  "name": "cade-meu-time",
-  "version": "1.6.1",
+  "name": "maior-do-nordeste-extension",
+  "version": "1.9.1",
   "type": "module",
   "scripts": {
     "test": "playwright test",

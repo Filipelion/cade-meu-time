@@ -16,7 +16,7 @@ export const JOGOS = {
     PLACAR_BASE: "https://www.placardefutebol.com.br",
   },
   TEXT: {
-    COUNTDOWN_PREFIX: "Próximo jogo em: ",
+    COUNTDOWN_PREFIX: "Próximo jogo em ",
     LIVE_HEADER: '<span class="live-dot"></span> AO VIVO',
     HALFTIME_HEADER: '<span class="live-dot"></span> INTERVALO',
     LIVE_DETAILS_HINT: "Clique para ver os detalhes da partida",
