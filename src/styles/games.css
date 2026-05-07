@@ -155,6 +155,7 @@ body.dark a.game--finished {
 .finished-header .game-league {
   margin-bottom: 0;
   font-size: 12px;
+  white-space: nowrap;
 }
 
 .finished-date {
