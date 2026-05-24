@@ -356,7 +356,7 @@ async function loadFinishedGames(panel) {
   if (isFinishedCacheValid()) {
     const cached = getCachedFinishedGames();
     if (cached) {
-      renderFinishedGames(cached, panel);
+      renderFinishedGames(cached, panel, currentLiveLink);
       return;
     }
   }
