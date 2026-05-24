@@ -11,6 +11,14 @@ A Extensão do Chrome "Maior do Nordeste" é uma ferramenta que permite aos fãs
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/chrome-web-store/v/lcjnhdjijcehakhghaflnocpmmeacilm?link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fmaior-do-nordeste-sport-c%2F%3Fauthuser%3D0%26hl%3Dpt-BR" alt="Chrome Web Store Version">
+  <img src="https://img.shields.io/chrome-web-store/users/lcjnhdjijcehakhghaflnocpmmeacilm?style=flat" alt="Chrome Web Store Users">
+  <img src="https://img.shields.io/chrome-web-store/rating/lcjnhdjijcehakhghaflnocpmmeacilm" alt="Chrome Web Store Rating">
+  <img src="https://img.shields.io/chrome-web-store/stars/lcjnhdjijcehakhghaflnocpmmeacilm" alt="Chrome Web Store Stars">
+</p>
+
+
+<p align="center">
   <img src="https://github.com/Filipelion/cade-meu-time/blob/main/screenshots/proximosJogos.png" alt="Captura de tela da extensão - &quot;Próximos jogos&quot;">
 </p>
 <p align="center">
