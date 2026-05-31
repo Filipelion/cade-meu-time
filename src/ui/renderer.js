@@ -4,7 +4,15 @@ const YOUTUBE_ICON_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000
 
 export function renderTickets(games, container, enriched = {}) {
   container.innerHTML = "";
-  if (!games || games.length === 0) return;
+  if (!games || games.length === 0) {
+    if (enriched && enriched.team_home) {
+      const message = document.createElement("div");
+      message.className = "loading-text";
+      message.textContent = INGRESSOS.TEXT.HOME_GAME_NO_TICKETS;
+      container.appendChild(message);
+    }
+    return;
+  }
 
   const game = games[0];
   const buyUrl = `${INGRESSOS.URL.BUY_BASE}${game.id}/comprar`;
@@ -29,7 +37,17 @@ export function renderTickets(games, container, enriched = {}) {
   const plans = document.createElement("div");
   plans.className = "ticket-plans";
 
-  const visiblePlans = game.liberacoes.filter((l) => l.publica);
+  const visiblePlans = Array.isArray(game.liberacoes)
+    ? game.liberacoes.filter((l) => l.publica)
+    : [];
+
+  if (visiblePlans.length === 0) {
+    const message = document.createElement("div");
+    message.className = "loading-text";
+    message.textContent = INGRESSOS.TEXT.HOME_GAME_NO_TICKETS;
+    container.appendChild(message);
+    return;
+  }
 
   const groups = new Map();
   visiblePlans.forEach((lib) => {
