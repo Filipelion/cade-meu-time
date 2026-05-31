@@ -9,10 +9,35 @@ const FAKE_LISTING_HTML = `<!DOCTYPE html><html><body>
 </a>
 </body></html>`;
 
+const FAKE_LISTING_HTML_AWAY = `<!DOCTYPE html><html><body>
+<a class="match__lg" href="/brasileirao-serie-b/test-sport-away.html">
+  <span class="match__lg_card--datetime">amanhã 18:00</span>
+  <span class="match__lg_card--league">Brasileirão Série B</span>
+  <span class="match__lg_card--ht-name text">América-MG</span>
+  <span class="match__lg_card--at-name text">Sport</span>
+  <div class="match__lg_card--ht-logo"><img src=""></div>
+  <div class="match__lg_card--at-logo"><img src=""></div>
+</a>
+</body></html>`;
+
 const FAKE_DETAIL_HTML = `<!DOCTYPE html><html><body>
 <div class="match-details">
   <p><img src="/images/local.png" alt="Ícone de Localização">Arena de Pernambuco (São Lourenço da Mata, PE)</p>
   <p><img src="/images/tv.png" alt="Ícone de TV" title="Transmissão"><strong>SporTV (7 dias grátis), Premiere</strong></p>
+</div>
+</body></html>`;
+
+const FAKE_DETAIL_HTML_HOME = `<!DOCTYPE html><html><body>
+<div class="match-details">
+  <p><img src="/images/local.png" alt="Ícone de Localização">Ilha do Retiro (Recife, PE)</p>
+  <p><img src="/images/tv.png" alt="Ícone de TV" title="Transmissão"><strong>SporTV (7 dias grátis), Premiere</strong></p>
+</div>
+</body></html>`;
+
+const FAKE_DETAIL_HTML_AWAY = `<!DOCTYPE html><html><body>
+<div class="match-details">
+  <p><img src="/images/local.png" alt="Ícone de Localização">Mineirão (Belo Horizonte, MG)</p>
+  <p><img src="/images/tv.png" alt="Ícone de TV" title="Transmissão"><strong>SporTV</strong></p>
 </div>
 </body></html>`;
 
@@ -103,7 +128,10 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=abc1234TEST";
 
 export {
   FAKE_LISTING_HTML,
+  FAKE_LISTING_HTML_AWAY,
   FAKE_DETAIL_HTML,
+  FAKE_DETAIL_HTML_HOME,
+  FAKE_DETAIL_HTML_AWAY,
   FAKE_DETAIL_HTML_WITH_YOUTUBE,
   FAKE_FINISHED_HTML,
   FAKE_HALF_TIME_GAME_HTML,

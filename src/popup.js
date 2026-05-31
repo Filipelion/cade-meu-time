@@ -329,8 +329,8 @@ async function loadTickets(gamesData) {
 function findNextHomeGameDate(gamesData, startIdx) {
   if (!gamesData?.datas?.length) return null;
   for (let i = startIdx; i < gamesData.datas.length; i++) {
-    const venue = gamesData.local?.[i];
-    if (venue && JOGOS.TEXT.HOME_VENUES.some((v) => venue.includes(v))) {
+    const venue = String(gamesData.local?.[i] ?? "").toLowerCase();
+    if (JOGOS.TEXT.HOME_VENUES.some((v) => venue.includes(v.toLowerCase()))) {
       const parts = gamesData.datas[i];
       return parts?.find((p) => /\d{2}\/\d{2}/.test(p)) ?? null;
     }
@@ -345,9 +345,11 @@ function findNextGameIndex(gamesData) {
 }
 
 function isNextGameHome(gamesData, idx) {
-  const venue = gamesData?.local?.[idx];
-  if (!venue) return false;
-  return JOGOS.TEXT.HOME_VENUES.some((v) => venue.includes(v));
+  const homeTeam = String(gamesData?.team_home?.[idx] ?? "").toLowerCase().trim();
+  if (homeTeam.includes("sport")) return true;
+
+  const venue = String(gamesData?.local?.[idx] ?? "").toLowerCase();
+  return JOGOS.TEXT.HOME_VENUES.some((v) => venue.includes(v.toLowerCase()));
 }
 
 async function loadFinishedGames(panel) {

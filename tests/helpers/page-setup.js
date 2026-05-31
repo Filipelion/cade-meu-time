@@ -7,7 +7,7 @@ import {
   CORS,
 } from "../fixtures/mock-data.js";
 
-async function setup(page, extensionId) {
+async function setup(page, extensionId, options = {}) {
   // Wildcard fallback handles individual match detail pages (lower LIFO priority)
   await page.route(/placardefutebol\.com\.br/, (r) =>
     r.fulfill({
@@ -41,6 +41,10 @@ async function setup(page, extensionId) {
       body: FAKE_SOCIOS_JSON,
     }),
   );
+
+  if (typeof options.customRoutes === "function") {
+    await options.customRoutes(page);
+  }
 
   // Safety net: intercept any GA4 request that slips through before _ga_disabled is set
   await page.route(/google-analytics\.com/, (r) =>

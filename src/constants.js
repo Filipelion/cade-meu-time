@@ -27,7 +27,7 @@ export const JOGOS = {
     FETCH_ERROR: "Erro ao buscar os próximos jogos",
     YOUTUBE_LIVE_LABEL: "Assistir ao vivo",
     YOUTUBE_LIVE_LABEL_HOVER: "Veja agora ao vivo",
-    HOME_VENUES: ["Ilha do Retiro", "Recife"],
+    HOME_VENUES: ["Ilha do Retiro", "Recife", "Arena de Pernambuco"],
   },
 };
 
@@ -44,6 +44,8 @@ export const INGRESSOS = {
     BUY_BTN: "Comprar",
     RELEASE_PREFIX: "Liberado ",
     FETCH_ERROR: "Erro ao buscar ingressos",
+    HOME_GAME_NO_TICKETS:
+      "Ingressos ainda não disponíveis. Em breve o Sport libera a compra.",
     AWAY_GAME: "Próximo jogo é fora de casa.",
     AWAY_GAME_WITH_DATE: (date) =>
       `Próximo jogo é fora de casa, dia ${date} tem jogo na Ilha novamente!`,
