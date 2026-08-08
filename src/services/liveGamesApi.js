@@ -94,9 +94,11 @@ export function parseReloadFromHTML(html) {
   const scores = Array.from(doc.querySelectorAll(".match-score-text"));
   const statusEl = doc.querySelector(".status-name");
   const minute = statusEl?.textContent.trim() ?? "";
+  const normalizedStatus = minute.toUpperCase();
+  const isHalftime = normalizedStatus === "INTERVALO";
   const isLive =
     (statusEl?.classList.contains("badge-success") ?? false) ||
-    minute === "Intervalo";
+    isHalftime;
   return {
     isLive,
     score_home: scores[0]?.textContent.trim() ?? "0",

@@ -225,7 +225,9 @@ export function renderLiveGames(data, container) {
     return;
   }
 
-  const isHalftime = data.minute.some((m) => m === "Intervalo");
+  const isHalftime = data.minute.some(
+  (m) => String(m).trim().toUpperCase() === "INTERVALO"
+);
 
   const existing = container.querySelectorAll("a.game--live");
   if (existing.length === data.team_home.length) {
