@@ -9,7 +9,7 @@ import {
 } from "./fixtures/mock-data.js";
 
 test.describe("Intervalo", () => {
-    test("Half-time match is being displayed as a finished game", async ({
+  test("Half-time keeps the match classified as live, not finished", async ({
     page,
     extensionId,
   }) => {

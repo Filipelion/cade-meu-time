@@ -115,7 +115,7 @@ const createHalfTimeLastGamesHTML = (liveHref) => `<!DOCTYPE html><html><body>
 </body></html>`;
 
 const FAKE_RELOAD_INTERVALO_HTML = `<!DOCTYPE html><html><body>
-<div class="status-name">Intervalo</div>
+<span class="badge badge-warning status-name">INTERVALO</span>
 <div class="match-score-text">1</div>
 <div class="match-score-text">0</div>
 </body></html>`;
